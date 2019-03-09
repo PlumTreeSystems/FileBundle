@@ -1,0 +1,14 @@
+{% block pts_file_widget %}
+    {% spaceless %}
+        <div class="vich-file">
+            {{ form_widget(form) }}
+
+            {% if download_uri %}
+                <div style="margin-top: 5px">
+                    <a href="{{ download_uri }}">{{ download_label }}</a>
+                    <a style="margin-left: 5px; color:red" href="{{ remove_uri }}">{{ remove_label }}</a>
+                </div>
+            {% endif %}
+        </div>
+    {% endspaceless %}
+{% endblock %}

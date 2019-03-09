@@ -1,0 +1,52 @@
+services:
+    pts_file.filesystem.factory:
+        class: PlumTreeSystems\FileBundle\Service\FileSystemFactory
+        arguments: ['%pts_file_provider%', '%pts_file_provider_settings%']
+        public: true
+
+    pts_file.manager:
+        class: PlumTreeSystems\FileBundle\Service\GaufretteFileManager
+        arguments: ['@pts_file.filesystem.factory', '@doctrine.orm.entity_manager', '@router', '%pts_file_extended_entity%']
+        public: true
+
+    pts_file.security.manager:
+        class: PlumTreeSystems\FileBundle\Security\SecurityManager
+        public: true
+
+    pts_file.security.provider.default:
+        class: PlumTreeSystems\FileBundle\Security\DefaultFileSecurityProvider
+        tags: [pts_file.security_provider]
+        public: true
+
+    pts_file.twig.extension:
+        class: PlumTreeSystems\FileBundle\Extension\FileTwigExtension
+        arguments: ['@pts_file.manager']
+        tags: ['twig.extension']
+        public: true
+
+    pts_file.form.transformer:
+        class: PlumTreeSystems\FileBundle\Form\Transformer\PTSFileTransformer
+        arguments: ['@pts_file.manager', '%pts_file_provider_settings%']
+        public: true
+
+    pts_file.form.type:
+        class: PlumTreeSystems\FileBundle\Form\Type\PTSFileType
+        arguments: ['@pts_file.form.transformer', '@pts_file.manager']
+        tags:
+          - { name: 'form.type', alias: 'pts_file' }
+        public: true
+
+    pts_file.form.extension:
+        class: PlumTreeSystems\FileBundle\Form\Extension\PTSTypeExtension
+        arguments: ['@pts_file.form.transformer']
+        tags:
+          - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FileType }
+        public: true
+
+    pts_file.listener:
+        class: PlumTreeSystems\FileBundle\Listener\FileListener
+        tags:
+            - { name: doctrine.orm.entity_listener, entity: PlumTreeSystems\FileBundle\Entity\File, event: prePersist }
+            - { name: doctrine.orm.entity_listener, entity: PlumTreeSystems\FileBundle\Entity\File, event: preUpdate }
+        arguments: ['@service_container', '%pts_file_replace%']
+        public: true

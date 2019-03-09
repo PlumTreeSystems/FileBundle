@@ -1,0 +1,16 @@
+PlumTreeSystems\FileBundle\Entity\File:
+    type: mappedSuperclass
+    table: pts_file
+    repositoryClass: PlumTreeSystems\FileBundle\Repository\FileRepository
+    fields:
+        name:
+            type: string
+            length: 255
+            unique: true
+        context:
+            type: string
+            length: 255
+        originalName:
+            type: string
+            length: 255
+    lifecycleCallbacks: {  }
