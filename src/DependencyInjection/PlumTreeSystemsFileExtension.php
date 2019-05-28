@@ -49,7 +49,7 @@ class PlumTreeSystemsFileExtension extends Extension
         $resources = $container->hasParameter('twig.form.resources') ?
             $container->getParameter('twig.form.resources') : [];
 
-        array_unshift($resources, '@PTSFile/Form/fields.html.twig');
+        array_unshift($resources, '@PlumTreeSystemsFile/Form/fields.html.twig');
         $container->setParameter('twig.form.resources', $resources);
     }
 }
