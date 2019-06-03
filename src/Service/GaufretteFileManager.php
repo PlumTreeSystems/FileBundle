@@ -136,11 +136,11 @@ class GaufretteFileManager implements FileManagerInterface
     public function removeEntity(\PlumTreeSystems\FileBundle\Entity\File $file, $flush = false)
     {
         try {
+            $this->remove($file);
             $this->entityManager->remove($file);
             if ($flush) {
                 $this->entityManager->flush();
-            }
-            $this->remove($file);
+            }            
         } catch (\Exception $e) {
             throw $e;
         }
