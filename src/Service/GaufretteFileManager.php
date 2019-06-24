@@ -198,6 +198,7 @@ class GaufretteFileManager implements FileManagerInterface
 //        $response->headers->set('Content-type', $file->getContextValue('Content-Type'));
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $file->getOriginalName() . '";');
         $response->headers->set('Content-length', $fileRef->getSize());
+        $response->headers->set('Content-Type', 'application/force-download');
 
         $response->sendHeaders();
         readfile($this->createStreamableUri($file));
