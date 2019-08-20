@@ -112,6 +112,9 @@ class GaufretteFileManager implements FileManagerInterface
         /*
          * @var \PTS\FileBundle\Entity\File $file
          */
+        if (!$file) {
+            throw new NotFoundHttpException("File not found by name: '".$name."'");
+        }
         $file->updateFileReference($this);
         return $file;
     }
@@ -122,6 +125,9 @@ class GaufretteFileManager implements FileManagerInterface
         /**
          * @var \PlumTreeSystems\FileBundle\Entity\File $file
          */
+        if (!$file) {
+            throw new NotFoundHttpException("File not found by id: '".$id."'");
+        }
         $file->updateFileReference($this);
         return $file;
     }
