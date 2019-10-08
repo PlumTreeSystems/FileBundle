@@ -10,6 +10,7 @@ namespace PlumTreeSystems\FileBundle\Model;
 
 use Gaufrette\Stream;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 interface FileManagerInterface

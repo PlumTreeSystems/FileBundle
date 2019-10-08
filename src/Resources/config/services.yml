@@ -6,8 +6,11 @@ services:
 
     pts_file.manager:
         class: PlumTreeSystems\FileBundle\Service\GaufretteFileManager
-        arguments: ['@pts_file.filesystem.factory', '@doctrine.orm.entity_manager', '@router', '%pts_file_extended_entity%']
+        arguments: ['@pts_file.filesystem.factory', '@doctrine.orm.entity_manager', '@router', '@request_stack', '%pts_file_provider_settings%', '%pts_file_extended_entity%']
         public: true
+
+    PlumTreeSystems\FileBundle\Service\GaufretteFileManager:
+        alias: pts_file.manager
 
     pts_file.security.manager:
         class: PlumTreeSystems\FileBundle\Security\SecurityManager

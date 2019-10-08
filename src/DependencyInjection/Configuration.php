@@ -28,6 +28,7 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('local')
                             ->children()
                                 ->scalarNode('directory')->end()
+                                ->scalarNode('web_root')->end()
                             ->end()
                         ->end()
                     ->end()

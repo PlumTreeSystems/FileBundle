@@ -19,6 +19,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PTSFileType extends AbstractType
 {
@@ -45,11 +46,24 @@ class PTSFileType extends AbstractType
                     $initialData = $form->getData();
                     $data = [];
                     // we prepend initial data on pre submit
-                    if ($initialData instanceof PersistentCollection) {
-                        $initialData = $initialData->getValues();
-                    }
-                    if (isset($initialData)) {
-                        $data = $initialData;
+                    if ($options['expanded']) {
+                        if ($initialData instanceof PersistentCollection) {
+                            $initialData = $initialData->getValues();
+                        }
+                        if (isset($initialData)) {
+                            $data = $initialData;
+                        }
+                    } else {
+                        if ($initialData instanceof PersistentCollection) {
+                            $initialData = $initialData->getValues();
+                        }
+                        if (isset($initialData)) {
+                            foreach ($initialData as $datum) {
+                                if ($options['deleteOrphans']) {
+                                    $this->removeOldFile($datum);
+                                }
+                            }
+                        }
                     }
 
                     foreach ($event->getData() as $file) {
@@ -79,11 +93,40 @@ class PTSFileType extends AbstractType
                         $event->setData($data);
                     } elseif (isset($options['data'])) {
                         $initial = $options['data'];
-                        $this->removeOldFile($initial);
+                        if ($options['deleteOrphans']) {
+                            $this->removeOldFile($initial);
+                        }
                     } else {
                         //currently does not support nesting due to this area
                         if (!is_null($form->getData())) {
-                            $this->removeOldFile($form->getData(), true);
+                            if ($options['deleteOrphans']) {
+                                $this->removeOldFile($form->getData(), true);
+                            }
+                        }
+                    }
+                }
+            })
+            ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($options) {
+                if ($options['public']) {
+                    $form = $event->getForm();
+                    $data = $form->getData();
+                    if ($options['multiple']) {
+                        if (is_array($data)) {
+                            foreach ($data as $datum) {
+                                /** @var $datum File */
+                                if (!$datum->getContextValue('public') ||
+                                    ($datum->getContextValue('public') && $datum->getContextValue('public') != 1)
+                                ) {
+                                    $datum->addContext('public', 1);
+                                }
+                            }
+                        }
+                    } else {
+                        /** @var $data File */
+                        if (!$data->getContextValue('public') ||
+                            ($data->getContextValue('public') && $data->getContextValue('public') != 1)
+                        ) {
+                            $data->addContext('public', 1);
                         }
                     }
                 }
@@ -95,9 +138,23 @@ class PTSFileType extends AbstractType
         $object = $form->getData();
         $view->vars['object'] = $object;
 
-        $view->vars['download_uri'] = null;
-        if ($object && $object->getId() !== null) {
-            $this->generateViewForExistingFile($view, $object);
+        if (!$options['multiple']) {
+            $view->vars['download_uri'] = null;
+
+            if ($object && $object->getId() !== null) {
+                $this->generateViewForExistingFile($view, $object);
+            }
+        } elseif ($object && is_array($object)) {
+            $view->vars['download_uri'] = [];
+            $view->vars['remove_uri'] = [];
+            $view->vars['download_label'] = [];
+
+            foreach ($object as $item) {
+                /** @var $item File */
+                if ($item->getId()) {
+                    $this->generateViewForExistingFiles($view, $item);
+                }
+            }
         }
     }
 
@@ -114,6 +171,33 @@ class PTSFileType extends AbstractType
                 'remove_label' => 'Remove'
             ]
         );
+    }
+
+    protected function generateViewForExistingFiles($view, File $file)
+    {
+        array_push($view->vars['download_uri'], $this->fileManager->
+        generateDownloadUrl($file));
+
+        array_push($view->vars['remove_uri'], $this->fileManager->
+        generateRemoveUrl($file, $_SERVER["REQUEST_URI"]));
+
+        array_push($view->vars['download_label'], $file->getOriginalName());
+
+        $view->vars = array_replace(
+            $view->vars,
+            [
+                'remove_label' => 'Remove'
+            ]
+        );
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'expanded' => false,
+            'public' => false,
+            'deleteOrphans' => true
+        ]);
     }
 
     public function getParent()

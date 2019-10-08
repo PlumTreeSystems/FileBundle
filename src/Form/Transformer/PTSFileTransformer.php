@@ -8,12 +8,10 @@
 
 namespace PlumTreeSystems\FileBundle\Form\Transformer;
 
-use PlumTreeSystems\FileBundle\Form\Type\PTSFileType;
-use Doctrine\ORM\PersistentCollection;
+use ArrayAccess;
 use PlumTreeSystems\FileBundle\Entity\File;
 use PlumTreeSystems\FileBundle\Model\FileManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class PTSFileTransformer implements DataTransformerInterface
@@ -51,7 +49,7 @@ class PTSFileTransformer implements DataTransformerInterface
         if ($value instanceof File) {
             return $value;
         }
-        if (is_array($value)) {
+        if (is_array($value) || $value instanceof ArrayAccess) {
             if (isset($value['error']) && is_int($value['error'])) {
                 $newFile = $this->fileManager->createNewFile();
                 $newFile->setUploadedFileReference(new UploadedFile($value['tmp_name'], $value['name']));
