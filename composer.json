@@ -26,12 +26,12 @@
     },
     "autoload": {
         "psr-4": {
-            "PlumTreeSystems\\UserBundle\\": "src/"
+            "PlumTreeSystems\\FileBundle\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "PlumTreeSystems\\UserBundle\\Tests\\": "Tests/"
+            "PlumTreeSystems\\FileBundle\\Tests\\": "Tests/"
         }
     },
     "require-dev": {

@@ -13,8 +13,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 abstract class File
 {
-    private $originalName;
-    private $name;
+    protected $originalName;
+    protected $name;
     /**
      * @var \Gaufrette\File
      */
@@ -24,7 +24,7 @@ abstract class File
      * @var UploadedFile
      */
     private $uploadedFileReference;
-    private $context;
+    protected $context;
 
     /**
      * File constructor.

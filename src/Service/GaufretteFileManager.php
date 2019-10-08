@@ -152,6 +152,9 @@ class GaufretteFileManager implements FileManagerInterface
     {
         $file = $this->entityManager->getRepository($this->class)->findOneBy([$name]);
         /* @var File $file */
+        if (!$file) {
+            throw new NotFoundHttpException("File not found by name: '".$name."'");
+        }
         $file->updateFileReference($this);
         return $file;
     }
@@ -160,6 +163,9 @@ class GaufretteFileManager implements FileManagerInterface
     {
         $file = $this->entityManager->getRepository($this->class)->find($id);
         /** @var File $file */
+        if (!$file) {
+            throw new NotFoundHttpException("File not found by id: '".$id."'");
+        }
         $file->updateFileReference($this);
         return $file;
     }
@@ -258,6 +264,7 @@ class GaufretteFileManager implements FileManagerInterface
 //        $response->headers->set('Content-type', $file->getContextValue('Content-Type'));
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $file->getOriginalName() . '";');
         $response->headers->set('Content-length', $fileRef->getSize());
+        $response->headers->set('Content-Type', 'application/force-download');
 
         $response->sendHeaders();
         readfile($this->createStreamableUri($file));
