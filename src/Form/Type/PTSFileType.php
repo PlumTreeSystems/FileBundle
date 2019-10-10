@@ -144,7 +144,7 @@ class PTSFileType extends AbstractType
             if ($object && $object->getId() !== null) {
                 $this->generateViewForExistingFile($view, $object);
             }
-        } elseif ($object && is_array($object)) {
+        } elseif (($object && is_array($object)) || ($object && $object instanceof PersistentCollection)) {
             $view->vars['download_uri'] = [];
             $view->vars['remove_uri'] = [];
             $view->vars['download_label'] = [];
