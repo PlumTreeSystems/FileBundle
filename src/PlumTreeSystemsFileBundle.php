@@ -8,6 +8,9 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class PlumTreeSystemsFileBundle extends Bundle
 {
+    const LOCAL_PROVIDER = 'local';
+    const AWS_S3_PROVIDER = 'aws_s3';
+
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
@@ -15,6 +18,7 @@ class PlumTreeSystemsFileBundle extends Bundle
     }
 
     static public $AVAILABLE_PROVIDERS = [
-        'local'
+        self::LOCAL_PROVIDER,
+        self::AWS_S3_PROVIDER
     ];
 }

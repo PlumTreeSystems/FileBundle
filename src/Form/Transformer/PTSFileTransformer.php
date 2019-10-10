@@ -22,16 +22,13 @@ class PTSFileTransformer implements DataTransformerInterface
      */
     private $fileManager;
 
-    private $directory;
-
     /**
      * PTSFileTransformer constructor.
      * @param FileManagerInterface $fileManager
      */
-    public function __construct(FileManagerInterface $fileManager, $options)
+    public function __construct(FileManagerInterface $fileManager)
     {
         $this->fileManager = $fileManager;
-        $this->directory = $options['directory'];
     }
 
     /**

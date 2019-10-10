@@ -15,6 +15,7 @@ use Gaufrette\Filesystem;
 use Gaufrette\StreamWrapper;
 use PlumTreeSystems\FileBundle\Entity\File;
 use PlumTreeSystems\FileBundle\Model\FileManagerInterface;
+use PlumTreeSystems\FileBundle\PlumTreeSystemsFileBundle;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,9 +50,14 @@ class GaufretteFileManager implements FileManagerInterface
     private $requestStack;
 
     /**
+     * @var array
+     */
+    private $providerSettings;
+
+    /**
      * @var string
      */
-    private $webRoot;
+    private $provider;
 
     /**
      * GaufretteFileManager constructor.
@@ -61,6 +67,7 @@ class GaufretteFileManager implements FileManagerInterface
      * @param RequestStack $requestStack
      * @param array $adapterSettings
      * @param string $class
+     * @param string $provider
      */
     public function __construct(
         FileSystemFactory $systemFactory,
@@ -68,18 +75,16 @@ class GaufretteFileManager implements FileManagerInterface
         UrlGeneratorInterface $router,
         RequestStack $requestStack,
         array $adapterSettings,
-        string $class
+        string $class,
+        string $provider
     ) {
         $this->entityManager = $em;
         $this->filesystem = $systemFactory->getFileSystem();
         $this->router = $router;
         $this->class = $class;
         $this->requestStack = $requestStack;
-        if (key_exists('web_root', $adapterSettings)) {
-            $this->webRoot = $adapterSettings['web_root'];
-        } else {
-            $this->webRoot = '';
-        }
+        $this->providerSettings = $adapterSettings;
+        $this->provider = $provider;
     }
 
     private function randomString()
@@ -205,13 +210,30 @@ class GaufretteFileManager implements FileManagerInterface
         }
     }
 
+    private function generatePublicDownloadUrlForLocal(string $fileKey)
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $baseUrl = $request->getBaseUrl();
+        $downloadUrl = $baseUrl.$this->providerSettings['web_root'].'/'.$fileKey;
+        return $downloadUrl;
+    }
+
+    private function generatePublicDownloadUrlForS3(string $fileKey)
+    {
+        $downloadUrl = 'https://s3.'.$this->providerSettings['region'].'.amazonaws.com/'.
+            $this->providerSettings['bucket_name'].'/'.$fileKey;
+        return $downloadUrl;
+    }
+
     public function generateDownloadUrl(File $file): string
     {
         if ($file->getContextValue('public') === '1') {
-            $request = $this->requestStack->getCurrentRequest();
-            $baseUrl = $request->getBaseUrl();
-            $downloadUrl = $baseUrl.$this->webRoot.'/'.$file->getName();
-            return $downloadUrl;
+            switch ($this->provider) {
+                case PlumTreeSystemsFileBundle::LOCAL_PROVIDER:
+                    return $this->generatePublicDownloadUrlForLocal($file->getName());
+                case PlumTreeSystemsFileBundle::AWS_S3_PROVIDER:
+                    return $this->generatePublicDownloadUrlForS3($file->getName());
+            }
         }
 
         $url = $this->router->generate(

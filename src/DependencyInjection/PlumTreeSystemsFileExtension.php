@@ -2,6 +2,9 @@
 
 namespace PlumTreeSystems\FileBundle\DependencyInjection;
 
+use PlumTreeSystems\FileBundle\PlumTreeSystemsFileBundle;
+use PlumTreeSystems\FileBundle\Service\GaufretteFileManager;
+use PlumTreeSystems\FileBundle\Service\GaufretteS3FileManager;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -28,7 +31,7 @@ class PlumTreeSystemsFileExtension extends Extension
 
         $provider = $config['provider'];
 
-        if (!in_array($provider, \PlumTreeSystems\FileBundle\PlumTreeSystemsFileBundle::$AVAILABLE_PROVIDERS)) {
+        if (!in_array($provider, PlumTreeSystemsFileBundle::$AVAILABLE_PROVIDERS)) {
             throw new InvalidConfigurationException(
                 "PTSFileBundle bad configuration, configured provider does not exist: ".$provider
             );
