@@ -107,30 +107,38 @@ class PTSFileType extends AbstractType
                 }
             })
             ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) use ($options) {
-                if ($options['public']) {
-                    $form = $event->getForm();
-                    $data = $form->getData();
-                    if ($options['multiple']) {
-                        if (is_array($data)) {
-                            foreach ($data as $datum) {
-                                /** @var $datum File */
-                                if (!$datum->getContextValue('public') ||
-                                    ($datum->getContextValue('public') && $datum->getContextValue('public') != 1)
-                                ) {
-                                    $datum->addContext('public', 1);
-                                }
-                            }
-                        }
-                    } else {
-                        /** @var $data File */
-                        if (!$data->getContextValue('public') ||
-                            ($data->getContextValue('public') && $data->getContextValue('public') != 1)
-                        ) {
-                            $data->addContext('public', 1);
+                $form = $event->getForm();
+                $data = $form->getData();
+                if ($options['multiple']) {
+                    if (is_array($data)) {
+                        foreach ($data as $datum) {
+                            self::updateWithOptions($datum, $options);
                         }
                     }
+                } else {
+                    self::updateWithOptions($data, $options);
                 }
             });
+    }
+
+    private static function updateWithOptions(File $datum, $options)
+    {
+        if ($options['public']) {
+            if (!$datum->getContextValue('public') ||
+                ($datum->getContextValue('public') && $datum->getContextValue('public') != 1)
+            ) {
+                $datum->addContext('public', 1);
+            }
+        }
+        if ($options['path'] && is_string($options['path'])) {
+            if ($datum->getContextValue('path')) {
+                $datum->removeContext('path');
+            }
+            if (!$datum->getContextValue('path')) {
+                $datum->addContext('path', $options['path']);
+            }
+        }
+        return $datum;
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options): void
@@ -196,7 +204,8 @@ class PTSFileType extends AbstractType
         $resolver->setDefaults([
             'expanded' => false,
             'public' => false,
-            'deleteOrphans' => true
+            'deleteOrphans' => true,
+            'path' =>  false
         ]);
     }
 

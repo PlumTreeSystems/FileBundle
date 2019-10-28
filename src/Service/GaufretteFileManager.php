@@ -100,8 +100,10 @@ class GaufretteFileManager implements FileManagerInterface
 
     public function getFileReference(File $file):? \Gaufrette\File
     {
-        if ($this->filesystem->has($file->getName())) {
-            return $this->filesystem->get($file->getName());
+
+        $path = $file->getContextValue('path') ?? '';
+        if ($this->filesystem->has($path.$file->getName())) {
+            return $this->filesystem->get($path.$file->getName());
         }
         return null;
     }
@@ -177,8 +179,9 @@ class GaufretteFileManager implements FileManagerInterface
 
     public function remove(File $file)
     {
-        if ($this->filesystem->has($file->getName())) {
-            $this->filesystem->delete($file->getName());
+        $path = $file->getContextValue('path') ?? '';
+        if ($this->filesystem->has($path.$file->getName())) {
+            $this->filesystem->delete($path.$file->getName());
         }
     }
 
@@ -210,16 +213,21 @@ class GaufretteFileManager implements FileManagerInterface
         }
     }
 
-    private function generatePublicDownloadUrlForLocal(string $fileKey)
+    private function generatePublicDownloadUrlForLocal(File $file)
     {
         $request = $this->requestStack->getCurrentRequest();
         $baseUrl = $request->getBaseUrl();
-        $downloadUrl = $baseUrl.$this->providerSettings['web_root'].'/'.$fileKey;
+
+        $path = $file->getContextValue('path') ?? '';
+
+        $fileKey = $file->getName();
+        $downloadUrl = $baseUrl.$this->providerSettings['web_root'].'/'.$path.$fileKey;
         return $downloadUrl;
     }
 
-    private function generatePublicDownloadUrlForS3(string $fileKey)
+    private function generatePublicDownloadUrlForS3(File $file)
     {
+        $fileKey = $file->getName();
         $downloadUrl = 'https://s3.'.$this->providerSettings['region'].'.amazonaws.com/'.
             $this->providerSettings['bucket_name'].'/'.$fileKey;
         return $downloadUrl;
@@ -230,9 +238,9 @@ class GaufretteFileManager implements FileManagerInterface
         if ($file->getContextValue('public') === '1') {
             switch ($this->provider) {
                 case PlumTreeSystemsFileBundle::LOCAL_PROVIDER:
-                    return $this->generatePublicDownloadUrlForLocal($file->getName());
+                    return $this->generatePublicDownloadUrlForLocal($file);
                 case PlumTreeSystemsFileBundle::AWS_S3_PROVIDER:
-                    return $this->generatePublicDownloadUrlForS3($file->getName());
+                    return $this->generatePublicDownloadUrlForS3($file);
             }
         }
 
@@ -271,8 +279,11 @@ class GaufretteFileManager implements FileManagerInterface
         $map = StreamWrapper::getFilesystemMap();
         $map->set($mapKey, $this->filesystem);
 
+        $path = $file->getContextValue('path') ?? '';
+
         StreamWrapper::register();
-        return 'gaufrette://'.$mapKey.'/'.$file->getName();
+        $streamableUri = 'gaufrette://'.$mapKey.'/'.$path.$file->getName();
+        return $streamableUri;
     }
 
     public function downloadFile(File $file): Response
