@@ -1,7 +1,7 @@
 pts_file_download:
     path:     /download/{id}
-    defaults: { _controller: PlumTreeSystems\FileBundle\FileController::downloadAction }
+    defaults: { _controller: PlumTreeSystems\FileBundle\Controller\FileController::downloadAction }
 
 pts_file_remove:
     path:     /remove/{id}
-    defaults: { _controller: PlumTreeSystems\FileBundle\FileController::removeAction }
+    defaults: { _controller: PlumTreeSystems\FileBundle\Controller\FileController::removeAction }
