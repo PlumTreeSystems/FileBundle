@@ -139,6 +139,10 @@ class GaufretteFileManager implements FileManagerInterface
 
         /** @var File $fileEntity */
         $fileEntity->setOriginalName($uploadedFile->getClientOriginalName());
+        if ($file->getContextValue('saveExt')) {
+            ['extension' => $extension ] = pathinfo($fileEntity->getOriginalName());
+            $hashName .= '.'.$extension;
+        }
         $fileEntity->setName($hashName);
         $fileEntity->addContext('Content-Type', $uploadedFile->getMimeType());
         $fileEntity->addContext('filesize', $uploadedFile->getSize());
