@@ -143,6 +143,12 @@ class PTSFileType extends AbstractType
                 $datum->addContext('saveExt', $options['saveExt']);
             }
         }
+        if ($options['presetName'] && is_string($options['presetName'])) {
+            if ($datum->getContextValue('presetName')) {
+                $datum->removeContext('presetName');
+            }
+            $datum->addContext('presetName', $options['presetName']);
+        }
         return $datum;
     }
 
@@ -211,7 +217,8 @@ class PTSFileType extends AbstractType
             'public' => false,
             'deleteOrphans' => true,
             'path' =>  false,
-            'saveExt' => false
+            'saveExt' => false,
+            'presetName' => false
         ]);
     }
 

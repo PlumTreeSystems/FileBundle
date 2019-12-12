@@ -135,6 +135,9 @@ class GaufretteFileManager implements FileManagerInterface
         }
         $uploadedFile = $file->getUploadedFileReference();
         $hashName = md5(time().$this->randomString());
+        if ($file->getContextValue('presetName')) {
+            $hashName = $file->getContextValue('presetName');
+        }
         $fileEntity = $file;
 
         /** @var File $fileEntity */
@@ -143,6 +146,7 @@ class GaufretteFileManager implements FileManagerInterface
             ['extension' => $extension ] = pathinfo($fileEntity->getOriginalName());
             $hashName .= '.'.$extension;
         }
+
         $fileEntity->setName($hashName);
         $fileEntity->addContext('Content-Type', $uploadedFile->getMimeType());
         $fileEntity->addContext('filesize', $uploadedFile->getSize());
