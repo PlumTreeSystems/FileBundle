@@ -121,8 +121,11 @@ class PTSFileType extends AbstractType
             });
     }
 
-    private static function updateWithOptions(File $datum, $options)
+    private static function updateWithOptions(?File $datum, $options)
     {
+        if (!$datum) {
+            return $datum;
+        }
         if ($options['public']) {
             if (!$datum->getContextValue('public') ||
                 ($datum->getContextValue('public') && $datum->getContextValue('public') != 1)
