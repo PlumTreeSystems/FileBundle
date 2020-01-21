@@ -150,8 +150,9 @@ class GaufretteFileManager implements FileManagerInterface
         $fileEntity->setName($hashName);
         $fileEntity->addContext('Content-Type', $uploadedFile->getMimeType());
         $fileEntity->addContext('filesize', $uploadedFile->getSize());
-
-        copy($uploadedFile->getPathname(), $this->createStreamableUri($fileEntity));
+        if (!$file->getContextValue('nosave')) {
+            copy($uploadedFile->getPathname(), $this->createStreamableUri($fileEntity));
+        }        
 
         $fileEntity->updateFileReference($this);
         return $fileEntity;
