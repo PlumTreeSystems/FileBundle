@@ -28,6 +28,7 @@ class FileListener implements ContainerAwareInterface
 
     /**
      * FileListener constructor.
+     * @param ContainerInterface $container
      * @param bool $replace
      */
     public function __construct(ContainerInterface $container, bool $replace)

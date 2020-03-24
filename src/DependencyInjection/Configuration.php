@@ -17,8 +17,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('plum_tree_systems_file');
+        $treeBuilder = new TreeBuilder('plum_tree_systems_file');
+        $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
             ->children()

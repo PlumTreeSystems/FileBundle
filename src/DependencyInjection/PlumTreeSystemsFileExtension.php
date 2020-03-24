@@ -4,7 +4,6 @@ namespace PlumTreeSystems\FileBundle\DependencyInjection;
 
 use PlumTreeSystems\FileBundle\PlumTreeSystemsFileBundle;
 use PlumTreeSystems\FileBundle\Service\GaufretteFileManager;
-use PlumTreeSystems\FileBundle\Service\GaufretteS3FileManager;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;

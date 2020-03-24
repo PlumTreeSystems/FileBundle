@@ -10,11 +10,11 @@ namespace PlumTreeSystems\FileBundle\Controller;
 
 use PlumTreeSystems\FileBundle\Security\SecurityManager;
 use PlumTreeSystems\FileBundle\Service\GaufretteFileManager;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-class FileController extends Controller
+class FileController extends AbstractController
 {
     public function downloadAction($id)
     {

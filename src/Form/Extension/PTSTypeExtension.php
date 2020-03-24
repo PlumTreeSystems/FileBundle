@@ -47,7 +47,7 @@ class PTSTypeExtension extends AbstractTypeExtension
         return FileType::class;
     }
 
-    public function getExtendedTypes(): iterable
+    public static function getExtendedTypes(): iterable
     {
         return [FileType::class];
     }
