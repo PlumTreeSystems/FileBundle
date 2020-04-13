@@ -9,7 +9,7 @@
         "ext-json": "*",
         "gaufrette/aws-s3-adapter": "^0.4.0",
         "google/apiclient": "^2.0",
-        "knplabs/gaufrette": "^0.8.1",
+        "knplabs/gaufrette": "^0.9",
         "symfony/console": "^5.0",
         "symfony/dotenv": "^5.0",
         "symfony/flex": "^1.6",
