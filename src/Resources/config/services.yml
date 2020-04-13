@@ -4,6 +4,9 @@ services:
         arguments: ['%pts_file_provider%', '%pts_file_provider_settings%']
         public: true
 
+    PlumTreeSystems\FileBundle\Service\FileSystemFactoryInterface:
+        alias: pts_file.filesystem.factory
+
     pts_file.manager:
         class: PlumTreeSystems\FileBundle\Service\GaufretteFileManager
         arguments: ['@pts_file.filesystem.factory', '@doctrine.orm.entity_manager', '@router', '@request_stack', '%pts_file_provider_settings%', '%pts_file_extended_entity%', '%pts_file_provider%']
@@ -15,6 +18,9 @@ services:
     pts_file.security.manager:
         class: PlumTreeSystems\FileBundle\Security\SecurityManager
         public: true
+
+    PlumTreeSystems\FileBundle\Security\SecurityManager:
+        alias: pts_file.security.manager
 
     pts_file.security.provider.default:
         class: PlumTreeSystems\FileBundle\Security\DefaultFileSecurityProvider

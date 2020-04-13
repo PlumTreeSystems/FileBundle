@@ -1,23 +1,21 @@
 {% block pts_file_widget %}
-    {% spaceless %}
-        <div class="vich-file">
-            {{ form_widget(form) }}
+    <div class="vich-file">
+        {{ form_widget(form) }}
 
-            {% if download_uri is defined and download_uri %}
-                {% if download_uri is iterable %}
-                    {% for download_item in download_uri %}
-                        <div style="margin-top: 5px">
-                            <a href="{{ download_item }}">{{ download_label[loop.index0] }}</a>
-                            <a style="margin-left: 5px; color:red" href="{{ remove_uri[loop.index0] }}">{{ remove_label }}</a>
-                        </div>
-                    {% endfor %}
-                {% else %}
+        {% if download_uri is defined and download_uri %}
+            {% if download_uri is iterable %}
+                {% for download_item in download_uri %}
                     <div style="margin-top: 5px">
-                        <a href="{{ download_uri }}">{{ download_label }}</a>
-                        <a style="margin-left: 5px; color:red" href="{{ remove_uri }}">{{ remove_label }}</a>
+                        <a href="{{ download_item }}">{{ download_label[loop.index0] }}</a>
+                        <a style="margin-left: 5px; color:red" href="{{ remove_uri[loop.index0] }}">{{ remove_label }}</a>
                     </div>
-                {% endif %}
+                {% endfor %}
+            {% else %}
+                <div style="margin-top: 5px">
+                    <a href="{{ download_uri }}">{{ download_label }}</a>
+                    <a style="margin-left: 5px; color:red" href="{{ remove_uri }}">{{ remove_label }}</a>
+                </div>
             {% endif %}
-        </div>
-    {% endspaceless %}
+        {% endif %}
+    </div>
 {% endblock %}

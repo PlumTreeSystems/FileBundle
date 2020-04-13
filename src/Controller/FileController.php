@@ -8,6 +8,7 @@
 
 namespace PlumTreeSystems\FileBundle\Controller;
 
+use PlumTreeSystems\FileBundle\Model\FileManagerInterface;
 use PlumTreeSystems\FileBundle\Security\SecurityManager;
 use PlumTreeSystems\FileBundle\Service\GaufretteFileManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,10 +17,8 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class FileController extends AbstractController
 {
-    public function downloadAction($id)
+    public function downloadAction($id, SecurityManager $securityManager, FileManagerInterface $fileManager)
     {
-        $securityManager = $this->get('pts_file.security.manager');
-        $fileManager = $this->get('pts_file.manager');
         /**
          * @var GaufretteFileManager $fileManager
          * @var SecurityManager $securityManager
@@ -32,11 +31,13 @@ class FileController extends AbstractController
         throw new AccessDeniedHttpException("You have no access to this file");
     }
 
-    public function removeAction(Request $request, $id)
-    {
+    public function removeAction(
+        Request $request,
+        $id,
+        SecurityManager $securityManager,
+        FileManagerInterface $fileManager
+    ) {
         $backUrl = $request->get('backUrl', '/');
-        $securityManager = $this->get('pts_file.security.manager');
-        $fileManager = $this->get('pts_file.manager');
 
         /**
          * @var GaufretteFileManager $fileManager

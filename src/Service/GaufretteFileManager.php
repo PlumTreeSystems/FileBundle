@@ -237,6 +237,14 @@ class GaufretteFileManager implements FileManagerInterface
         return $downloadUrl;
     }
 
+    private function generatePublicDownloadUrlForGoogle(File $file)
+    {
+        $fileKey = $file->getName();
+        $path = $file->getContextValue('path');
+        return 'https://storage.cloud.google.com/'.
+            $this->providerSettings['google_bucket'].'/'.$path.$fileKey;
+    }
+
     public function generateDownloadUrl(File $file): string
     {
         if ($file->getContextValue('public') === '1') {
@@ -245,6 +253,8 @@ class GaufretteFileManager implements FileManagerInterface
                     return $this->generatePublicDownloadUrlForLocal($file);
                 case PlumTreeSystemsFileBundle::AWS_S3_PROVIDER:
                     return $this->generatePublicDownloadUrlForS3($file);
+                case PlumTreeSystemsFileBundle::GOOGLE_STORAGE_CLOUD_PROVIDER:
+                    return $this->generatePublicDownloadUrlForGoogle($file);
             }
         }
 

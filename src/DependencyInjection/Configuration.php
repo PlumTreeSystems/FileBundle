@@ -41,6 +41,13 @@ class Configuration implements ConfigurationInterface
 
                             ->end()
                         ->end()
+                        ->arrayNode('google_cloud_storage')
+                            ->children()
+                                ->scalarNode('google_bucket')->end()
+                                ->scalarNode('auth_config_json')->end()
+
+                            ->end()
+                        ->end()
                     ->end()
                 ->end()
                 ->scalarNode('file_class')->isRequired()->end()
