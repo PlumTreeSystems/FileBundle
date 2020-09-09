@@ -38,4 +38,6 @@ interface FileManagerInterface
     public function createStreamableUri(\PlumTreeSystems\FileBundle\Entity\File $file): string;
 
     public function downloadFile(\PlumTreeSystems\FileBundle\Entity\File $file): Response;
+
+    public function getProviderSettings();
 }

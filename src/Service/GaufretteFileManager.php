@@ -10,14 +10,12 @@ namespace PlumTreeSystems\FileBundle\Service;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\Proxy;
-use Doctrine\ORM\EntityManager;
 use Exception;
 use Gaufrette\Filesystem;
 use Gaufrette\StreamWrapper;
 use PlumTreeSystems\FileBundle\Entity\File;
 use PlumTreeSystems\FileBundle\Model\FileManagerInterface;
 use PlumTreeSystems\FileBundle\PlumTreeSystemsFileBundle;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
