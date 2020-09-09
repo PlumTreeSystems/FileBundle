@@ -8,6 +8,7 @@
 
 namespace PlumTreeSystems\FileBundle\Service;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\Proxy;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -30,7 +31,7 @@ class GaufretteFileManager implements FileManagerInterface
     private $filesystem;
 
     /**
-     * @var EntityManager
+     * @var ObjectManager
      */
     private $entityManager;
 
@@ -62,7 +63,7 @@ class GaufretteFileManager implements FileManagerInterface
     /**
      * GaufretteFileManager constructor.
      * @param FileSystemFactory $systemFactory
-     * @param EntityManager $em
+     * @param ObjectManager $em
      * @param UrlGeneratorInterface $router
      * @param RequestStack $requestStack
      * @param array $adapterSettings
@@ -71,7 +72,7 @@ class GaufretteFileManager implements FileManagerInterface
      */
     public function __construct(
         FileSystemFactory $systemFactory,
-        EntityManager $em,
+        ObjectManager $em,
         UrlGeneratorInterface $router,
         RequestStack $requestStack,
         array $adapterSettings,
@@ -316,5 +317,10 @@ class GaufretteFileManager implements FileManagerInterface
         $response->sendHeaders();
         readfile($this->createStreamableUri($file));
         return $response;
+    }
+
+    public function getProviderSettings()
+    {
+        return $this->providerSettings;
     }
 }
