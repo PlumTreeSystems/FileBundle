@@ -23,7 +23,7 @@ interface FileManagerInterface
 
     public function getByName(string $name): \PlumTreeSystems\FileBundle\Entity\File;
 
-    public function getById(int $id): \PlumTreeSystems\FileBundle\Entity\File;
+    public function getById($id): \PlumTreeSystems\FileBundle\Entity\File;
 
     public function remove(\PlumTreeSystems\FileBundle\Entity\File $file);
 

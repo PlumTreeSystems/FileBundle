@@ -169,7 +169,7 @@ class GaufretteFileManager implements FileManagerInterface
         return $file;
     }
 
-    public function getById(int $id): File
+    public function getById($id): File
     {
         $file = $this->entityManager->getRepository($this->class)->find($id);
         /** @var File $file */
