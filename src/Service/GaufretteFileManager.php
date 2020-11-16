@@ -8,8 +8,8 @@
 
 namespace PlumTreeSystems\FileBundle\Service;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\Proxy;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\Proxy;
 use Exception;
 use Gaufrette\Filesystem;
 use Gaufrette\StreamWrapper;

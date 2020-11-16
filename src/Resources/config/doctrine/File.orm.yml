@@ -1,7 +1,6 @@
 PlumTreeSystems\FileBundle\Entity\File:
     type: mappedSuperclass
     table: pts_file
-    repositoryClass: PlumTreeSystems\FileBundle\Repository\FileRepository
     fields:
         name:
             type: string

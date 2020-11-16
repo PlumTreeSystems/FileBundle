@@ -8,8 +8,8 @@
 
 namespace PlumTreeSystems\FileBundle\Form\Type;
 
+use Doctrine\Common\Collections\Collection;
 use PlumTreeSystems\FileBundle\Entity\File;
-use Doctrine\ORM\PersistentCollection;
 use PlumTreeSystems\FileBundle\Form\Transformer\PTSFileTransformer;
 use PlumTreeSystems\FileBundle\Model\FileManagerInterface;
 use Symfony\Component\Form\AbstractType;
@@ -47,14 +47,14 @@ class PTSFileType extends AbstractType
                     $data = [];
                     // we prepend initial data on pre submit
                     if ($options['expanded']) {
-                        if ($initialData instanceof PersistentCollection) {
+                        if ($initialData instanceof Collection) {
                             $initialData = $initialData->getValues();
                         }
                         if (isset($initialData)) {
                             $data = $initialData;
                         }
                     } else {
-                        if ($initialData instanceof PersistentCollection) {
+                        if ($initialData instanceof Collection) {
                             $initialData = $initialData->getValues();
                         }
                         if (isset($initialData)) {
@@ -160,7 +160,7 @@ class PTSFileType extends AbstractType
             if ($object && $object->getId() !== null) {
                 $this->generateViewForExistingFile($view, $object);
             }
-        } elseif (($object && is_array($object)) || ($object && $object instanceof PersistentCollection)) {
+        } elseif (($object && is_array($object)) || ($object && $object instanceof Collection)) {
             $view->vars['download_uri'] = [];
             $view->vars['remove_uri'] = [];
             $view->vars['download_label'] = [];
