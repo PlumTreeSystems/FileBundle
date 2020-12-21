@@ -65,6 +65,17 @@ class FileListener implements ContainerAwareInterface
                 throw new FileAlreadyExistsException();
             }
         }
+        $prefixPath = $this->container->getParameter('pts_file_prefix_path');
+        $path = $file->getContextValue('path');
+        if ($prefixPath) {
+            if ($path) {
+                $path = $prefixPath.$path;
+                $file->removeContext('path');
+            } else {
+                $path = $prefixPath;
+            }
+            $file->addContext('path', $path);
+        }
         $this->container->get('pts_file.manager')->save($file);
     }
 

@@ -231,8 +231,9 @@ class GaufretteFileManager implements FileManagerInterface
     private function generatePublicDownloadUrlForS3(File $file)
     {
         $fileKey = $file->getName();
+        $path = $file->getContextValue('path');
         $downloadUrl = 'https://s3.'.$this->providerSettings['region'].'.amazonaws.com/'.
-            $this->providerSettings['bucket_name'].'/'.$fileKey;
+            $this->providerSettings['bucket_name'].'/'.$path.$fileKey;
         return $downloadUrl;
     }
 

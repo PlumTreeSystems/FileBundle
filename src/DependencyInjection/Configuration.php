@@ -51,6 +51,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('file_class')->isRequired()->end()
+                ->scalarNode('prefix_path')->defaultValue('')
                 ->booleanNode('replace_file')->end()
             ->end();
         // Here you should define the parameters that are allowed to
