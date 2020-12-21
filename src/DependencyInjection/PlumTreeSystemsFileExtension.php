@@ -37,11 +37,13 @@ class PlumTreeSystemsFileExtension extends Extension
         }
         $providerConfig = $config['provider_configs'][$provider];
         $fileClass = $config['file_class'];
+        $prefixPath = $config['prefix_path'];
         $replace = isset($config['replace_file'])? $config['replace_file'] : false;
         $container->setParameter('pts_file_provider', $provider);
         $container->setParameter('pts_file_provider_settings', $providerConfig);
         $container->setParameter('pts_file_extended_entity', $fileClass);
         $container->setParameter('pts_file_replace', $replace);
+        $container->setParameter('pts_file_prefix_path', $prefixPath);
 
         $this->registerFormTheme($container);
     }
