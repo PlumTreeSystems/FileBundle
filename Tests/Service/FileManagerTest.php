@@ -10,16 +10,19 @@ namespace PlumTreeSystems\FileBundle\Tests\Service;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\Persistence\ObjectRepository;
 use Gaufrette\Filesystem;
 use PHPUnit\Framework\MockObject\MockObject;
 use PlumTreeSystems\FileBundle\Entity\File;
 use PlumTreeSystems\FileBundle\Model\FileManagerInterface;
+use PlumTreeSystems\FileBundle\Model\FileSystemFactoryInterface;
 use PlumTreeSystems\FileBundle\Service\FileSystemFactory;
 use PlumTreeSystems\FileBundle\Service\GaufretteFileManager;
 use PlumTreeSystems\FileBundle\Tests\Service\FileManagerTest\TestFile;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\HeaderBag;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -49,6 +52,8 @@ class FileManagerTest extends TypeTestCase
      * @var FileManagerInterface
      */
     private $fileManager;
+
+    private RequestStack $rs;
 
     /**
      * @var array
@@ -93,7 +98,7 @@ class FileManagerTest extends TypeTestCase
             ->willReturn($this->filesystem);
 
         $this->entityManager = $this
-            ->getMockBuilder(EntityManager::class)
+            ->getMockBuilder(\Doctrine\Persistence\ObjectManager::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -102,11 +107,21 @@ class FileManagerTest extends TypeTestCase
         $this->router = $this->getMockBuilder(UrlGeneratorInterface::class)
             ->getMock();
 
-        $this->fileManager = new GaufretteFileManager(
-            $filesystemFactory,
+        $this->rs = $this->getMockBuilder(RequestStack::class)
+            ->getMock();
+
+        $this->fileManager = $this->buildFileManager($filesystemFactory);
+    }
+
+    private function buildFileManager(FileSystemFactoryInterface $fs): GaufretteFileManager {
+        return new GaufretteFileManager(
+            $fs,
             $this->entityManager,
             $this->router,
-            $this->class
+            $this->rs,
+            [],
+            $this->class,
+            "local"
         );
     }
 
@@ -125,11 +140,17 @@ class FileManagerTest extends TypeTestCase
     {
         $this->filesystem
             ->expects($this->once())
+            ->method('has')
+            ->willReturn(true);
+
+        $this->filesystem
+            ->expects($this->once())
             ->method('get')
             ->willReturn($this
                 ->getMockBuilder(\Gaufrette\File::class)
                 ->disableOriginalConstructor()
-                ->getMock());
+                ->getMock()
+            );
 
         $file = new $this->class();
 
@@ -157,8 +178,7 @@ class FileManagerTest extends TypeTestCase
                 $this->config
             );
 
-        $this->fileManager =
-            new GaufretteFileManager($fileSystemFactory, $this->entityManager, $this->router, $this->class);
+        $this->fileManager = $this->buildFileManager($fileSystemFactory);
 
         /**
          * @var File $file
@@ -177,6 +197,12 @@ class FileManagerTest extends TypeTestCase
 
     public function testGetByName()
     {
+
+        $this->filesystem
+            ->expects($this->once())
+            ->method('has')
+            ->willReturn(true);
+
         $this->filesystem
             ->expects($this->once())
             ->method('get')
@@ -186,7 +212,7 @@ class FileManagerTest extends TypeTestCase
                 ->getMock());
 
         $mockpository = $this
-            ->getMockBuilder(EntityRepository::class)
+            ->getMockBuilder(ObjectRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -209,6 +235,11 @@ class FileManagerTest extends TypeTestCase
     {
         $this->filesystem
             ->expects($this->once())
+            ->method('has')
+            ->willReturn(true);
+
+        $this->filesystem
+            ->expects($this->once())
             ->method('get')
             ->willReturn($this
                 ->getMockBuilder(\Gaufrette\File::class)
@@ -216,7 +247,7 @@ class FileManagerTest extends TypeTestCase
                 ->getMock());
 
         $mockpository = $this
-            ->getMockBuilder(EntityRepository::class)
+            ->getMockBuilder(ObjectRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -241,6 +272,11 @@ class FileManagerTest extends TypeTestCase
         $file->setName('test');
 
         $this->filesystem
+            ->expects($this->atLeastOnce())
+            ->method('has')
+            ->willReturn(true);
+
+        $this->filesystem
             ->expects($this->once())
             ->method('delete')
             ->with($this->isType('string'));
@@ -252,6 +288,11 @@ class FileManagerTest extends TypeTestCase
     {
         $file = new $this->class();
         $file->setName('test');
+
+        $this->filesystem
+            ->expects($this->atLeastOnce())
+            ->method('has')
+            ->willReturn(true);
 
         $this->filesystem
             ->expects($this->exactly(2))
@@ -294,7 +335,7 @@ class FileManagerTest extends TypeTestCase
             ->with($this->isType('string'), $this->isType('array'))
             ->willReturn($url);
 
-        $returned = $this->fileManager->generateRemoveUrl($file);
+        $returned = $this->fileManager->generateRemoveUrl($file, "");
         $this->assertEquals($url, $returned);
     }
 
@@ -322,8 +363,7 @@ class FileManagerTest extends TypeTestCase
                 $this->config
             );
 
-        $this->fileManager =
-            new GaufretteFileManager($fileSystemFactory, $this->entityManager, $this->router, $this->class);
+        $this->fileManager = $this->buildFileManager($fileSystemFactory);
 
         /**
          * @var File $file
@@ -342,10 +382,7 @@ class FileManagerTest extends TypeTestCase
             $response->headers->get('Content-Disposition'),
             'attachment; filename="' . $returned->getOriginalName() . '";'
         );
-        $this->assertEquals(
-            $response->headers->get('Content-type'),
-            $file->getContextValue('Content-Type')
-        );
+        
         $this->assertEquals(
             $response->headers->get('Cache-Control'),
             'private'

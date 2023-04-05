@@ -8,7 +8,6 @@
 
 namespace PlumTreeSystems\FileBundle\Form\Type;
 
-use Doctrine\Common\Collections\Collection;
 use PlumTreeSystems\FileBundle\Entity\File;
 use PlumTreeSystems\FileBundle\Form\Transformer\PTSFileTransformer;
 use PlumTreeSystems\FileBundle\Model\FileManagerInterface;
@@ -47,15 +46,15 @@ class PTSFileType extends AbstractType
                     $data = [];
                     // we prepend initial data on pre submit
                     if ($options['expanded']) {
-                        if ($initialData instanceof Collection) {
-                            $initialData = $initialData->getValues();
+                        if ($initialData instanceof \Traversable) {
+                            $initialData = iterator_to_array($initialData);
                         }
                         if (isset($initialData)) {
                             $data = $initialData;
                         }
                     } else {
-                        if ($initialData instanceof Collection) {
-                            $initialData = $initialData->getValues();
+                        if ($initialData instanceof \Traversable) {
+                            $initialData = iterator_to_array($initialData);
                         }
                         if (isset($initialData)) {
                             foreach ($initialData as $datum) {
@@ -160,7 +159,7 @@ class PTSFileType extends AbstractType
             if ($object && $object->getId() !== null) {
                 $this->generateViewForExistingFile($view, $object);
             }
-        } elseif (($object && is_array($object)) || ($object && $object instanceof Collection)) {
+        } elseif (($object && is_array($object)) || ($object && $object instanceof \Traversable)) {
             $view->vars['download_uri'] = [];
             $view->vars['remove_uri'] = [];
             $view->vars['download_label'] = [];
@@ -214,7 +213,8 @@ class PTSFileType extends AbstractType
             'public' => false,
             'deleteOrphans' => true,
             'path' =>  false,
-            'saveExt' => false
+            'saveExt' => false,
+            'allow_file_upload' => true
         ]);
     }
 
