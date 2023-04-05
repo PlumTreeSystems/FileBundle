@@ -81,7 +81,7 @@ class FormTest extends TypeTestCase
 
     public function testCreateViewSingle()
     {
-        $formData = [];
+        $formData = null;
         $form = $this->factory->create(PTSFileType::class);
         $form->submit($formData);
         $this->assertTrue($form->isSynchronized());
@@ -164,7 +164,7 @@ class FormTest extends TypeTestCase
             ->getMock();
 
         $initial = [$ptsFile, $ptsFile2];
-        $form = $this->factory->createBuilder(PTSFileType::class, $initial, ['multiple' => true])
+        $form = $this->factory->createBuilder(PTSFileType::class, $initial, ['multiple' => true, 'expanded' => true])
             ->setRequestHandler($requestHandler)
             ->getForm();
 
@@ -249,7 +249,7 @@ class FormTest extends TypeTestCase
         $this->assertInstanceOf(File::class, $resolvedData['file']);
     }
 
-    public function requestHandlerProvider()
+    static function requestHandlerProvider()
     {
         return [
             [new HttpFoundationRequestHandler()],
