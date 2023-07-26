@@ -12,11 +12,17 @@ use PlumTreeSystems\FileBundle\Entity\File;
 
 class TestFile extends File
 {
+    private ?string $id = null;
+
     /**
      * @return mixed
      */
     public function getId()
     {
-        return null;
+        return $this->id;
+    }
+
+    public function setId(?string $id) {
+        $this->id = $id;
     }
 }

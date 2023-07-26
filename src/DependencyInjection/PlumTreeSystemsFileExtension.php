@@ -3,10 +3,13 @@
 namespace PlumTreeSystems\FileBundle\DependencyInjection;
 
 use PlumTreeSystems\FileBundle\PlumTreeSystemsFileBundle;
+use PlumTreeSystems\FileBundle\Provider\LocalFileProvider;
+use PlumTreeSystems\FileBundle\Provider\S3FileProvider;
 use PlumTreeSystems\FileBundle\Service\GaufretteFileManager;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -35,14 +38,49 @@ class PlumTreeSystemsFileExtension extends Extension
                 "PTSFileBundle bad configuration, configured provider does not exist: ".$provider
             );
         }
-        $providerConfig = $config['provider_configs'][$provider];
         $fileClass = $config['file_class'];
-        $prefixPath = $config['prefix_path'];
         $replace = isset($config['replace_file'])? $config['replace_file'] : false;
-        $container->setParameter('pts_file_provider', $provider);
-        $container->setParameter('pts_file_provider_settings', $providerConfig);
         $container->setParameter('pts_file_extended_entity', $fileClass);
         $container->setParameter('pts_file_replace', $replace);
+
+        // Universal manager
+        $pathMappings = [];
+        foreach($config['path_map'] as $path => $pathConfig) {
+            $pathMappings[$path] = $pathConfig['provider'];
+        }
+        $container->setParameter('pts_file_path_map', $pathMappings);
+        $container->setParameter('pts_file_default_provider', $config['default_provider'] ?? '');
+
+        foreach($config['generic_providers']['s3'] as $providerName => $s3Provider) {
+            $def = new Definition(S3FileProvider::class, [[
+                'credentials' => [
+                    'key' => $s3Provider['key'],
+                    'secret' => $s3Provider['secret']
+                ],
+                'region' => $s3Provider['region'],
+                'bucket' => $s3Provider['bucket']
+            ]]);
+            $def->addTag('pts.file.provider');
+            $def->setPublic(true);
+            $container->setDefinition($providerName, $def);
+        }
+
+        foreach($config['generic_providers']['local'] as $providerName => $localProvider) {
+            $def = new Definition(LocalFileProvider::class, [
+                $localProvider['dir'],
+                $localProvider['dir_url'] ?? ''
+            ]);
+            $def->addTag('pts.file.provider');
+            $def->setPublic(true);
+            $container->setDefinition($providerName, $def);
+        }
+
+        
+        // Gaufrette manager config
+        $providerConfig = $config['provider_configs'][$provider];
+        $prefixPath = $config['prefix_path'];
+        $container->setParameter('pts_file_provider', $provider);
+        $container->setParameter('pts_file_provider_settings', $providerConfig);
         $container->setParameter('pts_file_prefix_path', $prefixPath);
 
         $this->registerFormTheme($container);

@@ -2,6 +2,7 @@
     "name": "plumtreesystems/file-bundle",
     "type": "symfony-bundle",
     "license": "MIT",
+    "version": "2.1",
     "require": {
         "php": ">=8.0",
         "ext-ctype": "*",
@@ -12,6 +13,7 @@
         "google/apiclient": "^2.0",
         "knplabs/gaufrette": "^0.11",
         "symfony/console": "^6.2",
+        "symfony/deprecation-contracts": "^3.3",
         "symfony/dotenv": "^6.2",
         "symfony/flex": "^1.15",
         "symfony/form": "^6.2",
@@ -42,6 +44,8 @@
         }
     },
     "require-dev": {
+        "doctrine/doctrine-bundle": "^2.10",
+        "doctrine/orm": "^2.15",
         "phpunit/phpunit": "^10.0",
         "symfony/browser-kit": "^6.0",
         "symfony/css-selector": "^6.0",

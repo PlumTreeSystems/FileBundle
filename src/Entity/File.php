@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 abstract class File
 {
     protected $originalName;
+
     protected $name;
     /**
      * @var \Gaufrette\File
@@ -24,7 +25,10 @@ abstract class File
      * @var UploadedFile
      */
     private $uploadedFileReference;
+
     protected $context;
+
+    protected string $path = '';
 
     /**
      * File constructor.
@@ -36,6 +40,7 @@ abstract class File
 
     public function updateFileReference(FileManagerInterface $fileManager)
     {
+        trigger_deprecation("plumtreesystems/file-bundle", "2.1", "Update file reference is deprecated");
         $this->fileReference = $fileManager->getFileReference($this);
         return $this;
     }
@@ -129,5 +134,16 @@ abstract class File
     public function setUploadedFileReference($uploadedFileReference)
     {
         $this->uploadedFileReference = $uploadedFileReference;
+    }
+
+    public function getPath(): string 
+    {
+        return $this->path;
+    }
+
+    public function setPath(string $path): self 
+    {
+        $this->path = $path;
+        return $this;
     }
 }

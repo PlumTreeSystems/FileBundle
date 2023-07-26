@@ -8,8 +8,6 @@
 
 namespace PlumTreeSystems\FileBundle\Tests\Service;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
 use Gaufrette\Filesystem;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -21,9 +19,7 @@ use PlumTreeSystems\FileBundle\Service\GaufretteFileManager;
 use PlumTreeSystems\FileBundle\Tests\Service\FileManagerTest\TestFile;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class FileManagerTest extends TypeTestCase

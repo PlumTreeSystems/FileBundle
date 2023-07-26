@@ -9,6 +9,9 @@ PlumTreeSystems\FileBundle\Entity\File:
         context:
             type: string
             length: 255
+        path:
+            type: string
+            length: 1000
         originalName:
             type: string
             length: 255

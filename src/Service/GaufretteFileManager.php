@@ -96,10 +96,12 @@ class GaufretteFileManager implements FileManagerInterface
         return $randstring;
     }
 
-
+    /**
+     * @deprecated since 2.1
+     */
     public function getFileReference(File $file):? \Gaufrette\File
     {
-
+        trigger_deprecation("plumtreesystems/file-bundle", "2.1", "Get file reference is deprecated");
         $path = $file->getContextValue('path') ?? '';
         if ($this->filesystem->has($path.$file->getName())) {
             return $this->filesystem->get($path.$file->getName());
@@ -157,9 +159,11 @@ class GaufretteFileManager implements FileManagerInterface
     /**
      * @param string $name
      * @return File
+     * @deprecated since 2.1
      */
     public function getByName(string $name): File
     {
+        trigger_deprecation("plumtreesystems/file-bundle", "2.1", "getByName is deprecated");
         $file = $this->entityManager->getRepository($this->class)->findOneBy([$name]);
         /* @var File $file */
         if (!$file) {
@@ -168,9 +172,12 @@ class GaufretteFileManager implements FileManagerInterface
         $file->updateFileReference($this);
         return $file;
     }
-
+    /**
+     * @deprecated since 2.1
+     */
     public function getById($id): File
     {
+        trigger_deprecation("plumtreesystems/file-bundle", "2.1", "getById is deprecated");
         $file = $this->entityManager->getRepository($this->class)->find($id);
         /** @var File $file */
         if (!$file) {
@@ -201,9 +208,11 @@ class GaufretteFileManager implements FileManagerInterface
      * @param File $file
      * @param bool $flush
      * @throws Exception
+     * @deprecated since 2.1
      */
     public function removeEntity(File $file, $flush = false)
     {
+        trigger_deprecation("plumtreesystems/file-bundle", "2.1", "removeEntity is deprecated");
         try {
             $this->loadEntity($file);
             $this->entityManager->remove($file);
