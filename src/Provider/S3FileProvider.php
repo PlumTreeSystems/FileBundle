@@ -8,7 +8,6 @@ use PlumTreeSystems\FileBundle\Exception\NoUploadedFileException;
 
 class S3FileProvider implements FileProviderInterface
 {
-
     protected S3Client $client;
 
     protected string $bucket;
@@ -17,14 +16,13 @@ class S3FileProvider implements FileProviderInterface
     {
         $this->client = new S3Client([
             'credentials' => [
-                'key' => $s3Config['key'],
-                'secret' => $s3Config['secret']
+                'key' => $s3Config['credentials']['key'],
+                'secret' => $s3Config['credentials']['secret']
             ],
             'region' => $s3Config['region']
         ]);
 
         $this->bucket = $s3Config['bucket'];
-
     }
 
     public function getClient(): S3Client
@@ -80,7 +78,10 @@ class S3FileProvider implements FileProviderInterface
     }
 
     protected function extractBucketAndKey(File $file) {
-        return [$this->bucket, $file->getPath()];
+        return [
+            $this->bucket,
+            join('/', [$file->getPath(), $file->getName()])
+        ];
     }
 
 }

@@ -10,7 +10,6 @@
         "ext-json": "*",
         "doctrine/common": "^3.0",
         "gaufrette/aws-s3-adapter": "^0.4.0",
-        "google/apiclient": "^2.0",
         "knplabs/gaufrette": "^0.11",
         "symfony/console": "^6.2",
         "symfony/deprecation-contracts": "^3.3",
