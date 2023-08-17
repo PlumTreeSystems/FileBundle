@@ -27,6 +27,11 @@ class S3FileProvider implements FileProviderInterface
 
     }
 
+    public function getClient(): S3Client
+    {
+        return $this->client;
+    }
+
     public function getAuthorizedRemoteUri(File $file): ?string 
     {
         [$bucket, $key] = $this->extractBucketAndKey($file);
@@ -40,15 +45,20 @@ class S3FileProvider implements FileProviderInterface
  
     public function persist(File $file)
     {
-        
-        $ref = $file->getUploadedFileReference();
-        if (!$ref) {
-            throw new NoUploadedFileException("UploadedFileReference not attached to File");
+        $stream = $file->getDataStream();
+
+        if (!$stream) {
+            $ref = $file->getUploadedFileReference();
+
+            if (!$ref) {
+                throw new NoUploadedFileException("UploadedFileReference not attached to File");
+            }
+
+            $stream = fopen($ref->getPathname(), 'r');
         }
         
         [$bucket, $key] = $this->extractBucketAndKey($file);
-        $fd = fopen($ref->getPathname(), 'r');
-        $this->client->upload($bucket, $key, $fd);
+        $this->client->upload($bucket, $key, $stream);
     }
 
     public function remove(File $file)

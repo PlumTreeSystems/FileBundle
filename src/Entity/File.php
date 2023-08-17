@@ -30,6 +30,8 @@ abstract class File
 
     protected string $path = '';
 
+    protected $dataStream = null;
+
     /**
      * File constructor.
      */
@@ -145,5 +147,22 @@ abstract class File
     {
         $this->path = $path;
         return $this;
+    }
+
+    /**
+     * @param $dataStream mixed
+     */
+    public function setDataStream($dataStream): self
+    {
+        $this->dataStream = $dataStream;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDataStream()
+    {
+        return $this->dataStream;
     }
 }
