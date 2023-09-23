@@ -21,11 +21,18 @@ class LocalFileProvider implements FileProviderInterface
  
     public function persist(File $file)
     {
-        
-        $ref = $file->getUploadedFileReference();
-        if (!$ref) {
-            throw new NoUploadedFileException("UploadedFileReference not attached to File");
+        $stream = $file->getDataStream();
+
+        if (!$stream) {
+            $ref = $file->getUploadedFileReference();
+
+            if (!$ref) {
+                throw new NoUploadedFileException("UploadedFileReference not attached to File");
+            }
+
+            $stream = fopen($ref->getPathname(), 'r');
         }
+              
         
         if (!file_exists($this->dir)) {
             mkdir($this->dir);
@@ -41,9 +48,14 @@ class LocalFileProvider implements FileProviderInterface
             }
         }
         $path .= '/'.$file->getName();
-        if (!rename($ref->getPathname(), $path)){
-            throw new \Exception("Failed to move file ".$ref->getPathname()." to $path");
+        $newFile = fopen($path, 'w');
+
+        if (!$newFile){
+            throw new \Exception("Failed to move file to $path");
         }
+
+        stream_copy_to_stream($stream, $newFile);
+        fclose($newFile);
 
     }
 
