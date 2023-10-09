@@ -9,8 +9,8 @@ use PlumTreeSystems\FileBundle\Exception\NoUploadedFileException;
 class S3FileProvider implements FileProviderInterface
 {
     protected S3Client $client;
-
     protected string $bucket;
+    protected string $prefix = '';
 
     public function __construct(array $s3Config)
     {
@@ -23,6 +23,7 @@ class S3FileProvider implements FileProviderInterface
         ]);
 
         $this->bucket = $s3Config['bucket'];
+        $this->prefix = $s3Config['prefix'];
     }
 
     public function getClient(): S3Client
@@ -67,8 +68,10 @@ class S3FileProvider implements FileProviderInterface
 
     public function getStreamableUri(File $file): string
     {
+        [ $bucket, $key ] = $this->extractBucketAndKey($file);
+
         $this->client->registerStreamWrapper();
-        return 's3://' . $file->getPath();
+        return "s3://$key";
     }
 
     public function getRawRemoteUri(File $file): string 
@@ -78,9 +81,15 @@ class S3FileProvider implements FileProviderInterface
     }
 
     protected function extractBucketAndKey(File $file) {
+        $toJoin = [$file->getPath(), $file->getName()];
+
+        if ($this->prefix !== '') {
+            array_unshift($toJoin, $this->prefix);
+        }
+
         return [
             $this->bucket,
-            join('/', [$file->getPath(), $file->getName()])
+            join('/', $toJoin)
         ];
     }
 

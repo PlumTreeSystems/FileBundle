@@ -58,7 +58,8 @@ class PlumTreeSystemsFileExtension extends Extension
                     'secret' => $s3Provider['secret']
                 ],
                 'region' => $s3Provider['region'],
-                'bucket' => $s3Provider['bucket']
+                'bucket' => $s3Provider['bucket'],
+                'prefix' => $s3Provider['prefix']
             ]]);
             $def->addTag('pts.file.provider');
             $def->setPublic(true);
