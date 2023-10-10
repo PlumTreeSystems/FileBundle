@@ -71,7 +71,7 @@ class S3FileProvider implements FileProviderInterface
         [ $bucket, $key ] = $this->extractBucketAndKey($file);
 
         $this->client->registerStreamWrapper();
-        return "s3://$key";
+        return "s3://$bucket/$key";
     }
 
     public function getRawRemoteUri(File $file): string
