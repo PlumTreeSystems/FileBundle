@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: marius
@@ -16,7 +17,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class PTSFileTransformer implements DataTransformerInterface
 {
-
     /**
      * @var FileManagerInterface $fileManager
      */

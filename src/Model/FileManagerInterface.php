@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: marius
@@ -15,7 +16,7 @@ interface FileManagerInterface
     /**
      * @deprecated since 2.1
      */
-    public function getFileReference(\PlumTreeSystems\FileBundle\Entity\File $file):? \Gaufrette\File;
+    public function getFileReference(\PlumTreeSystems\FileBundle\Entity\File $file): ?\Gaufrette\File;
 
     public function read(\PlumTreeSystems\FileBundle\Entity\File $file): string;
 

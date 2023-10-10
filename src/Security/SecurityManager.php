@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: marius
@@ -14,7 +15,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class SecurityManager
 {
-
     /**
      * @var FileSecurityProviderInterface[] $securityProviders
      */

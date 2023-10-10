@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: marius
@@ -25,7 +26,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class UniversalFileManagerTest extends TestCase
 {
-
     /**
      * @var MockObject
      */
@@ -67,7 +67,7 @@ class UniversalFileManagerTest extends TestCase
 
         $this->createdFiles = [];
 
-        $this->fileDir = sys_get_temp_dir().'/file_provider';
+        $this->fileDir = sys_get_temp_dir() . '/file_provider';
 
         $this->entityManager = $this
             ->getMockBuilder(\Doctrine\Persistence\ObjectManager::class)
@@ -84,12 +84,13 @@ class UniversalFileManagerTest extends TestCase
         $this->router = $this->getMockBuilder(UrlGeneratorInterface::class)
             ->getMock();
         $this->router->method('generate')
-            ->willReturnCallback(fn($route, $args) => 'https://test.com/download/'.$args['id']);
+            ->willReturnCallback(fn($route, $args) => 'https://test.com/download/' . $args['id']);
 
         $this->fileManager = $this->buildFileManager($filesystemFactory);
     }
 
-    private function buildFileManager(): UniversalFileManager {
+    private function buildFileManager(): UniversalFileManager
+    {
         return new UniversalFileManager(
             $this->serviceLocator,
             ['local/location' => 'local_1'],
@@ -120,7 +121,7 @@ class UniversalFileManagerTest extends TestCase
         $file->setPath('local/location');
         $file->setName('test.txt');
         $this->fileManager->save($file);
-        $this->assertTrue(file_exists($this->fileDir.'/local/location/test.txt'));
+        $this->assertTrue(file_exists($this->fileDir . '/local/location/test.txt'));
         // read
         $this->assertEquals('data', $this->fileManager->read($file));
         // generateDownloadUrl
@@ -129,8 +130,9 @@ class UniversalFileManagerTest extends TestCase
         $file->addContext('public', 1);
         $this->assertEquals('https://test.com/local/location/test.txt', $this->fileManager->generateDownloadUrl($file));
         // create streamable uri
-        $this->assertEquals('file://'.$this->fileDir.'/local/location/test.txt', $this->fileManager->createStreamableUri($file));
-        
+        $this->assertEquals(
+            'file://' . $this->fileDir . '/local/location/test.txt',
+            $this->fileManager->createStreamableUri($file)
+        );
     }
-   
 }

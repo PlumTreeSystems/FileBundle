@@ -18,7 +18,7 @@ class PlumTreeSystemsFileBundle extends Bundle
         $container->addCompilerPass(new SecurityProviderPass());
     }
 
-    static public $AVAILABLE_PROVIDERS = [
+    public static $AVAILABLE_PROVIDERS = [
         self::LOCAL_PROVIDER,
         self::AWS_S3_PROVIDER,
         self::GOOGLE_STORAGE_CLOUD_PROVIDER

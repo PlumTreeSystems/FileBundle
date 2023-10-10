@@ -28,30 +28,30 @@ class PlumTreeSystemsFileExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
         $provider = $config['provider'];
 
         if (!in_array($provider, PlumTreeSystemsFileBundle::$AVAILABLE_PROVIDERS)) {
             throw new InvalidConfigurationException(
-                "PTSFileBundle bad configuration, configured provider does not exist: ".$provider
+                "PTSFileBundle bad configuration, configured provider does not exist: " . $provider
             );
         }
         $fileClass = $config['file_class'];
-        $replace = isset($config['replace_file'])? $config['replace_file'] : false;
+        $replace = isset($config['replace_file']) ? $config['replace_file'] : false;
         $container->setParameter('pts_file_extended_entity', $fileClass);
         $container->setParameter('pts_file_replace', $replace);
 
         // Universal manager
         $pathMappings = [];
-        foreach($config['path_map'] as $path => $pathConfig) {
+        foreach ($config['path_map'] as $path => $pathConfig) {
             $pathMappings[$path] = $pathConfig['provider'];
         }
         $container->setParameter('pts_file_path_map', $pathMappings);
         $container->setParameter('pts_file_default_provider', $config['default_provider'] ?? '');
 
-        foreach($config['generic_providers']['s3'] as $providerName => $s3Provider) {
+        foreach ($config['generic_providers']['s3'] as $providerName => $s3Provider) {
             $def = new Definition(S3FileProvider::class, [[
                 'credentials' => [
                     'key' => $s3Provider['key'],
@@ -66,7 +66,7 @@ class PlumTreeSystemsFileExtension extends Extension
             $container->setDefinition($providerName, $def);
         }
 
-        foreach($config['generic_providers']['local'] as $providerName => $localProvider) {
+        foreach ($config['generic_providers']['local'] as $providerName => $localProvider) {
             $def = new Definition(LocalFileProvider::class, [
                 $localProvider['dir'],
                 $localProvider['dir_url'] ?? ''
@@ -76,7 +76,7 @@ class PlumTreeSystemsFileExtension extends Extension
             $container->setDefinition($providerName, $def);
         }
 
-        
+
         // Gaufrette manager config
         $providerConfig = $config['provider_configs'][$provider];
         $prefixPath = $config['prefix_path'];

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: marius
@@ -109,7 +110,8 @@ class FileManagerTest extends TypeTestCase
         $this->fileManager = $this->buildFileManager($filesystemFactory);
     }
 
-    private function buildFileManager(FileSystemFactoryInterface $fs): GaufretteFileManager {
+    private function buildFileManager(FileSystemFactoryInterface $fs): GaufretteFileManager
+    {
         return new GaufretteFileManager(
             $fs,
             $this->entityManager,
@@ -145,8 +147,7 @@ class FileManagerTest extends TypeTestCase
             ->willReturn($this
                 ->getMockBuilder(\Gaufrette\File::class)
                 ->disableOriginalConstructor()
-                ->getMock()
-            );
+                ->getMock());
 
         $file = new $this->class();
 
@@ -182,12 +183,12 @@ class FileManagerTest extends TypeTestCase
         $uploadedFile = $this->createTestFile('testfile');
         $file->setUploadedFileReference($uploadedFile);
         $returned = $this->fileManager->save($file);
-        
+
         $this->assertNotNull($file->getName());
 
         $this->assertEquals(
             file_get_contents($uploadedFile->getPathname()),
-            file_get_contents($this->config['directory'].$returned->getName())
+            file_get_contents($this->config['directory'] . $returned->getName())
         );
     }
 
@@ -378,7 +379,7 @@ class FileManagerTest extends TypeTestCase
             $response->headers->get('Content-Disposition'),
             'attachment; filename="' . $returned->getOriginalName() . '";'
         );
-        
+
         $this->assertEquals(
             $response->headers->get('Cache-Control'),
             'private'

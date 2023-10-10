@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: marius
@@ -20,17 +21,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class FileController extends AbstractController
 {
     public function downloadAction(
-        $id, 
-        SecurityManager $securityManager, 
-        FileManagerInterface $fileManager, 
+        $id,
+        SecurityManager $securityManager,
+        FileManagerInterface $fileManager,
         ObjectManager $om,
         string $ptsFileExtendedEntity
-    )
-    {
+    ) {
         $file = $om->find($ptsFileExtendedEntity, $id);
         if (!$file) {
-            throw new NotFoundHttpException("File not found by id: '".$id."'");
-        }        
+            throw new NotFoundHttpException("File not found by id: '" . $id . "'");
+        }
         $user = $this->getUser();
         if ($securityManager->checkPermissions($user, $file)) {
             return $fileManager->downloadFile($file);
@@ -50,8 +50,8 @@ class FileController extends AbstractController
 
         $file = $om->find($ptsFileExtendedEntity, $id);
         if (!$file) {
-            throw new NotFoundHttpException("File not found by id: '".$id."'");
-        }        
+            throw new NotFoundHttpException("File not found by id: '" . $id . "'");
+        }
         $user = $this->getUser();
 
         if ($securityManager->checkPermissions($user, $file)) {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: marius
@@ -91,7 +92,7 @@ class GaufretteFileManager implements FileManagerInterface
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $randstring = '';
         for ($i = 0; $i < 10; $i++) {
-            $randstring = $randstring . $characters[rand(0, strlen($characters)-1)];
+            $randstring = $randstring . $characters[rand(0, strlen($characters) - 1)];
         }
         return $randstring;
     }
@@ -99,12 +100,12 @@ class GaufretteFileManager implements FileManagerInterface
     /**
      * @deprecated since 2.1
      */
-    public function getFileReference(File $file):? \Gaufrette\File
+    public function getFileReference(File $file): ?\Gaufrette\File
     {
         trigger_deprecation("plumtreesystems/file-bundle", "2.1", "Get file reference is deprecated");
         $path = $file->getContextValue('path') ?? '';
-        if ($this->filesystem->has($path.$file->getName())) {
-            return $this->filesystem->get($path.$file->getName());
+        if ($this->filesystem->has($path . $file->getName())) {
+            return $this->filesystem->get($path . $file->getName());
         }
         return null;
     }
@@ -135,19 +136,19 @@ class GaufretteFileManager implements FileManagerInterface
             }
         }
         $uploadedFile = $file->getUploadedFileReference();
-        $hashName = md5(time().$this->randomString());
+        $hashName = md5(time() . $this->randomString());
         $fileEntity = $file;
 
         /** @var File $fileEntity */
         $fileEntity->setOriginalName($uploadedFile->getClientOriginalName());
         if ($file->getContextValue('saveExt')) {
             ['extension' => $extension ] = pathinfo($fileEntity->getOriginalName());
-            $hashName .= '.'.$extension;
+            $hashName .= '.' . $extension;
         }
         $fileEntity->setName($hashName);
         $fileEntity->addContext('Content-Type', $uploadedFile->getMimeType());
         $fileEntity->addContext('filesize', $uploadedFile->getSize());
-        
+
         copy($uploadedFile->getPathname(), $this->createStreamableUri($fileEntity));
 
         $fileEntity->updateFileReference($this);
@@ -167,7 +168,7 @@ class GaufretteFileManager implements FileManagerInterface
         $file = $this->entityManager->getRepository($this->class)->findOneBy([$name]);
         /* @var File $file */
         if (!$file) {
-            throw new NotFoundHttpException("File not found by name: '".$name."'");
+            throw new NotFoundHttpException("File not found by name: '" . $name . "'");
         }
         $file->updateFileReference($this);
         return $file;
@@ -181,7 +182,7 @@ class GaufretteFileManager implements FileManagerInterface
         $file = $this->entityManager->getRepository($this->class)->find($id);
         /** @var File $file */
         if (!$file) {
-            throw new NotFoundHttpException("File not found by id: '".$id."'");
+            throw new NotFoundHttpException("File not found by id: '" . $id . "'");
         }
         $file->updateFileReference($this);
         return $file;
@@ -190,8 +191,8 @@ class GaufretteFileManager implements FileManagerInterface
     public function remove(File $file)
     {
         $path = $file->getContextValue('path') ?? '';
-        if ($this->filesystem->has($path.$file->getName())) {
-            $this->filesystem->delete($path.$file->getName());
+        if ($this->filesystem->has($path . $file->getName())) {
+            $this->filesystem->delete($path . $file->getName());
         }
     }
 
@@ -233,7 +234,7 @@ class GaufretteFileManager implements FileManagerInterface
         $path = $file->getContextValue('path') ?? '';
 
         $fileKey = $file->getName();
-        $downloadUrl = $baseUrl.$this->providerSettings['web_root'].'/'.$path.$fileKey;
+        $downloadUrl = $baseUrl . $this->providerSettings['web_root'] . '/' . $path . $fileKey;
         return $downloadUrl;
     }
 
@@ -241,8 +242,8 @@ class GaufretteFileManager implements FileManagerInterface
     {
         $fileKey = $file->getName();
         $path = $file->getContextValue('path');
-        $downloadUrl = 'https://s3.'.$this->providerSettings['region'].'.amazonaws.com/'.
-            $this->providerSettings['bucket_name'].'/'.$path.$fileKey;
+        $downloadUrl = 'https://s3.' . $this->providerSettings['region'] . '.amazonaws.com/' .
+            $this->providerSettings['bucket_name'] . '/' . $path . $fileKey;
         return $downloadUrl;
     }
 
@@ -250,8 +251,8 @@ class GaufretteFileManager implements FileManagerInterface
     {
         $fileKey = $file->getName();
         $path = $file->getContextValue('path');
-        return 'https://storage.cloud.google.com/'.
-            $this->providerSettings['google_bucket'].'/'.$path.$fileKey;
+        return 'https://storage.cloud.google.com/' .
+            $this->providerSettings['google_bucket'] . '/' . $path . $fileKey;
     }
 
     public function generateDownloadUrl(File $file): string
@@ -305,7 +306,7 @@ class GaufretteFileManager implements FileManagerInterface
         $path = $file->getContextValue('path') ?? '';
 
         StreamWrapper::register();
-        $streamableUri = 'gaufrette://'.$mapKey.'/'.$path.$file->getName();
+        $streamableUri = 'gaufrette://' . $mapKey . '/' . $path . $file->getName();
         return $streamableUri;
     }
 
@@ -313,7 +314,7 @@ class GaufretteFileManager implements FileManagerInterface
     {
         $fileRef = $this->getFileReference($file);
         if (!$fileRef) {
-            throw new NotFoundHttpException('File: "'.$file->getName().'", was not found.');
+            throw new NotFoundHttpException('File: "' . $file->getName() . '", was not found.');
         }
         $response = new Response();
         $response->headers->set('Cache-Control', 'private');

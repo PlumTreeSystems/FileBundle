@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: marius
@@ -16,7 +17,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PTSTypeExtension extends AbstractTypeExtension
 {
-
     private $transformer;
 
     public function __construct(PTSFileTransformer $transformer)

@@ -13,7 +13,7 @@ class LocalFileProviderTest extends KernelTestCase
     private LocalFileProvider $provider;
 
     private string $dir;
-    
+
     private $createdFiles = [];
 
     private function createTestUploadFile(string $name): UploadedFile
@@ -28,28 +28,32 @@ class LocalFileProviderTest extends KernelTestCase
         return $file;
     }
 
-    private function createTestFile($name = "test.txt"): File {
+    private function createTestFile($name = "test.txt"): File
+    {
         $file = new TestFile();
         $file->setPath('local/location');
         $file->setName($name);
         return $file;
     }
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         self::bootKernel(['debug' => false]);
         $this->provider = static::getContainer()->get('local_1');
-        $this->dir = __DIR__.'/../../../var/files/local/location';
+        $this->dir = __DIR__ . '/../../../var/files/local/location';
     }
 
-    public function testPersist(): void {
+    public function testPersist(): void
+    {
         $file = $this->createTestFile();
         $upload = $this->createTestUploadFile("test");
         $file->setUploadedFileReference($upload);
         $this->provider->persist($file);
-        $this->assertTrue(file_exists($this->dir.'/test.txt'));
+        $this->assertTrue(file_exists($this->dir . '/test.txt'));
     }
 
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
 
         foreach ($this->createdFiles as $file) {
             /**

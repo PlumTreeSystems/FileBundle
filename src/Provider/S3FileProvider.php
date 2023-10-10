@@ -31,7 +31,7 @@ class S3FileProvider implements FileProviderInterface
         return $this->client;
     }
 
-    public function getAuthorizedRemoteUri(File $file): ?string 
+    public function getAuthorizedRemoteUri(File $file): ?string
     {
         [$bucket, $key] = $this->extractBucketAndKey($file);
         $cmd = $this->client->getCommand('GetObject', [
@@ -41,7 +41,7 @@ class S3FileProvider implements FileProviderInterface
         $req = $this->client->createPresignedRequest($cmd, '+1 minutes');
         return (string) $req->getUri();
     }
- 
+
     public function persist(File $file)
     {
         $stream = $file->getDataStream();
@@ -55,7 +55,7 @@ class S3FileProvider implements FileProviderInterface
 
             $stream = fopen($ref->getPathname(), 'r');
         }
-        
+
         [$bucket, $key] = $this->extractBucketAndKey($file);
         $this->client->upload($bucket, $key, $stream);
     }
@@ -74,13 +74,14 @@ class S3FileProvider implements FileProviderInterface
         return "s3://$key";
     }
 
-    public function getRawRemoteUri(File $file): string 
+    public function getRawRemoteUri(File $file): string
     {
         [$bucket, $key] = $this->extractBucketAndKey($file);
         return $this->client->getObjectUrl($bucket, $key);
     }
 
-    protected function extractBucketAndKey(File $file) {
+    protected function extractBucketAndKey(File $file)
+    {
         $toJoin = [$file->getPath(), $file->getName()];
 
         if ($this->prefix !== '') {
@@ -92,5 +93,4 @@ class S3FileProvider implements FileProviderInterface
             join('/', $toJoin)
         ];
     }
-
 }

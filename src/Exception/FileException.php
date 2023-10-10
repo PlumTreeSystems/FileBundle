@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: marius
@@ -10,5 +11,4 @@ namespace PlumTreeSystems\FileBundle\Exception;
 
 class FileException extends \Exception
 {
-
 }

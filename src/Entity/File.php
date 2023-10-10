@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: marius
@@ -138,12 +139,12 @@ abstract class File
         $this->uploadedFileReference = $uploadedFileReference;
     }
 
-    public function getPath(): string 
+    public function getPath(): string
     {
         return $this->path;
     }
 
-    public function setPath(string $path): self 
+    public function setPath(string $path): self
     {
         $this->path = $path;
         return $this;

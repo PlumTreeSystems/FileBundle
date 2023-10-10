@@ -16,9 +16,8 @@ use Symfony\Polyfill\Intl\Icu\Exception\NotImplementedException;
 
 class UniversalFileManager implements FileManagerInterface
 {
-
     /**
-     * 
+     *
      * @var FileProviderInterface[]
      */
     protected iterable $fileProviders;
@@ -30,9 +29,11 @@ class UniversalFileManager implements FileManagerInterface
         private string $defaultProvider,
         private string $ptsFileExtendedEntity,
         private UrlGeneratorInterface $router,
-    ) { }
+    ) {
+    }
 
-    protected function grabProvider(File $file): FileProviderInterface {
+    protected function grabProvider(File $file): FileProviderInterface
+    {
         foreach ($this->fileProviderMap as $path => $service) {
             if (str_starts_with($file->getPath(), $path)) {
                 $provider = $this->locator->get($service);
@@ -47,7 +48,7 @@ class UniversalFileManager implements FileManagerInterface
 
         if (!$this->defaultProvider) {
             throw new ProviderNotFoundException(
-                "File provider for path ".$file->getPath()." was not found and default provider is not set."
+                "File provider for path " . $file->getPath() . " was not found and default provider is not set."
             );
         }
 
@@ -58,10 +59,12 @@ class UniversalFileManager implements FileManagerInterface
             );
         }
         return $provider;
-
     }
-    
-    public function getFileReference(File $file): ?GaufretteFile { return null; }
+
+    public function getFileReference(File $file): ?GaufretteFile
+    {
+        return null;
+    }
 
     public function read(File $file): string
     {
@@ -81,12 +84,12 @@ class UniversalFileManager implements FileManagerInterface
             }
         }
         $uploadedFile = $file->getUploadedFileReference();
-        $hashName = md5(time().uniqid());
+        $hashName = md5(time() . uniqid());
 
         $file->setOriginalName($uploadedFile->getClientOriginalName());
         if ($file->getContextValue('saveExt')) {
             ['extension' => $extension ] = pathinfo($file->getOriginalName());
-            $hashName .= '.'.$extension;
+            $hashName .= '.' . $extension;
         }
         if (!$file->getName()) {
             $file->setName($hashName);
@@ -162,11 +165,11 @@ class UniversalFileManager implements FileManagerInterface
         return $provider->getStreamableUri($file);
     }
 
-    public function downloadFile(File $file): Response 
+    public function downloadFile(File $file): Response
     {
         $fileRef = $this->getFileReference($file);
         if (!$fileRef) {
-            throw new NotFoundHttpException('File: "'.$file->getName().'", was not found.');
+            throw new NotFoundHttpException('File: "' . $file->getName() . '", was not found.');
         }
         $response = new Response();
         $response->headers->set('Cache-Control', 'private');

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: marius
@@ -23,7 +24,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FormTest extends TypeTestCase
 {
-
     /**
      * @var MockObject
      */
@@ -41,11 +41,11 @@ class FormTest extends TypeTestCase
 //        $dir = $root.DIRECTORY_SEPARATOR.'..'
 //            .DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'cache'
 //            .DIRECTORY_SEPARATOR.'test'.DIRECTORY_SEPARATOR;
-        $dir = sys_get_temp_dir().DIRECTORY_SEPARATOR;
-        $handler = fopen($dir.$name.'.txt', 'w');
+        $dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR;
+        $handler = fopen($dir . $name . '.txt', 'w');
         fwrite($handler, 'tes test tes test boop bop');
         fclose($handler);
-        $file = new UploadedFile($dir.$name.'.txt', $name.'.txt');
+        $file = new UploadedFile($dir . $name . '.txt', $name . '.txt');
         $this->createdFiles[] = $file;
         return $file;
     }
@@ -249,7 +249,7 @@ class FormTest extends TypeTestCase
         $this->assertInstanceOf(File::class, $resolvedData['file']);
     }
 
-    static function requestHandlerProvider()
+    protected static function requestHandlerProvider()
     {
         return [
             [new HttpFoundationRequestHandler()],

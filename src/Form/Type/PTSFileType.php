@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: marius
@@ -22,7 +23,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PTSFileType extends AbstractType
 {
-
     private $transformer;
     private $fileManager;
 
@@ -126,8 +126,10 @@ class PTSFileType extends AbstractType
             return $datum;
         }
         if ($options['public']) {
-            if (!$datum->getContextValue('public') ||
-                ($datum->getContextValue('public') && $datum->getContextValue('public') != 1)
+            if (
+                !$datum->getContextValue('public')
+                || ($datum->getContextValue('public')
+                && $datum->getContextValue('public') != 1)
             ) {
                 $datum->addContext('public', 1);
             }

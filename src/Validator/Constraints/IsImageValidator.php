@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: Marius
@@ -15,7 +16,6 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class IsImageValidator extends ConstraintValidator
 {
-
     /**
      * Checks if the passed value is valid.
      *
@@ -29,8 +29,9 @@ class IsImageValidator extends ConstraintValidator
         }
 
         $uploadedFile = $value->getUploadedFileReference();
-        if ($uploadedFile !== null &&
-            !preg_match('/image\/.*/', $uploadedFile->getClientMimeType())
+        if (
+            $uploadedFile !== null
+            && !preg_match('/image\/.*/', $uploadedFile->getClientMimeType())
         ) {
             $this->context->buildViolation($constraint->message)->addViolation();
         }

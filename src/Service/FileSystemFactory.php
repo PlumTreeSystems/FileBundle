@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: marius
@@ -40,7 +41,6 @@ class FileSystemFactory implements FileSystemFactoryInterface
             case 'google_cloud_storage':
                 $this->setUpGoogleFileSystem($config);
                 break;
-
         }
     }
 
@@ -72,8 +72,10 @@ class FileSystemFactory implements FileSystemFactoryInterface
     {
         $client = new Google_Client();
 
-        if (!key_exists('auth_config_json', $config)
-            || (key_exists('auth_config_json', $config) && !$config['auth_config_json'])) {
+        if (
+            !key_exists('auth_config_json', $config)
+            || (key_exists('auth_config_json', $config) && !$config['auth_config_json'])
+        ) {
             throw new Exception('invalid configuration');
         }
 
@@ -99,7 +101,6 @@ class FileSystemFactory implements FileSystemFactoryInterface
             true
         );
         $this->filesystem = new Filesystem($this->adapter);
-
     }
 
     public function getFileSystem(): Filesystem

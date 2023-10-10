@@ -6,7 +6,8 @@ use PlumTreeSystems\FileBundle\Entity\File;
 
 class TestFile extends File
 {
-
-    public function getId() { return null; }
-
+    public function getId()
+    {
+        return null;
+    }
 }

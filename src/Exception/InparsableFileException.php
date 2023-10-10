@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: marius
@@ -13,7 +14,7 @@ use PlumTreeSystems\FileBundle\Entity\File;
 class InparsableFileException extends FileException
 {
     public function __construct(
-        $message = 'Function expected a child of "'.File::class.'"'
+        $message = 'Function expected a child of "' . File::class . '"'
     ) {
         parent::__construct($message);
     }

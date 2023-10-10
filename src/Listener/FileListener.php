@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: marius
@@ -69,7 +70,7 @@ class FileListener implements ContainerAwareInterface
         $path = $file->getContextValue('path');
         if ($prefixPath) {
             if ($path) {
-                $path = $prefixPath.$path;
+                $path = $prefixPath . $path;
                 $file->removeContext('path');
             } else {
                 $path = $prefixPath;

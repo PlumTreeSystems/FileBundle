@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: marius
@@ -22,7 +23,8 @@ class TestFile extends File
         return $this->id;
     }
 
-    public function setId(?string $id) {
+    public function setId(?string $id)
+    {
         $this->id = $id;
     }
 }

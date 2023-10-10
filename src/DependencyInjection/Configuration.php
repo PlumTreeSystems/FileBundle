@@ -87,7 +87,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('file_class')->isRequired()->end()
                 ->scalarNode('prefix_path')->defaultValue('')->end()
                 ->booleanNode('replace_file')->end()
-                
+
             ->end();
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
