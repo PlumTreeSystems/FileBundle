@@ -82,8 +82,11 @@ class S3FileProvider implements FileProviderInterface
 
     protected function extractBucketAndKey(File $file)
     {
-        $toJoin = [$file->getPath(), $file->getName()];
+        $toJoin = [$file->getName()];
 
+        if (empty($file->getPath()) === false) {
+            array_unshift($toJoin, $file->getPath());
+        }
         if ($this->prefix !== '') {
             array_unshift($toJoin, $this->prefix);
         }
