@@ -32,6 +32,9 @@ class UniversalFileManager implements FileManagerInterface
     ) {
     }
 
+    /**
+     * @throws ProviderNotFoundException
+     */
     protected function grabProvider(File $file): FileProviderInterface
     {
         foreach ($this->fileProviderMap as $path => $service) {
@@ -180,6 +183,15 @@ class UniversalFileManager implements FileManagerInterface
         $response->sendHeaders();
         readfile($this->createStreamableUri($file));
         return $response;
+    }
+
+    /**
+     * @throws ProviderNotFoundException
+     */
+    public function getAuthorizedRemoteUri(File $file): ?string
+    {
+        $provider = $this->grabProvider($file);
+        return $provider->getAuthorizedRemoteUri($file);
     }
 
     public function getProviderSettings()
