@@ -2,7 +2,7 @@
     "name": "plumtreesystems/file-bundle",
     "type": "symfony-bundle",
     "license": "MIT",
-    "version": "2.1.4",
+    "version": "2.2.0",
     "require": {
         "php": ">=8.0",
         "ext-ctype": "*",
