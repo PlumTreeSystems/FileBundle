@@ -35,7 +35,10 @@ class LocalFileProvider implements FileProviderInterface
 
 
         if (!file_exists($this->dir)) {
-            mkdir($this->dir);
+            mkdir(
+                directory: $this->dir,
+                recursive: true,
+            );
         }
 
         $pathParts = explode('/', $file->getPath());
