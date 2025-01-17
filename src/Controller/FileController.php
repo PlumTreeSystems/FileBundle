@@ -27,6 +27,12 @@ class FileController extends AbstractController
         ObjectManager $om,
         string $ptsFileExtendedEntity
     ) {
+        trigger_deprecation(
+            'plumtreesystems/file-bundle',
+            '2.3',
+            'downloadAction() is now deprecated and will be removed in 3.0.'
+        );
+
         $file = $om->find($ptsFileExtendedEntity, $id);
         if (!$file) {
             throw new NotFoundHttpException("File not found by id: '" . $id . "'");
@@ -46,6 +52,12 @@ class FileController extends AbstractController
         ObjectManager $om,
         string $ptsFileExtendedEntity
     ) {
+        trigger_deprecation(
+            'plumtreesystems/file-bundle',
+            '2.3',
+            'removeAction() is now deprecated and will be removed in 3.0.'
+        );
+
         $backUrl = $request->get('backUrl', '/');
 
         $file = $om->find($ptsFileExtendedEntity, $id);

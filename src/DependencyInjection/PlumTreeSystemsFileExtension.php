@@ -5,7 +5,6 @@ namespace PlumTreeSystems\FileBundle\DependencyInjection;
 use PlumTreeSystems\FileBundle\PlumTreeSystemsFileBundle;
 use PlumTreeSystems\FileBundle\Provider\LocalFileProvider;
 use PlumTreeSystems\FileBundle\Provider\S3FileProvider;
-use PlumTreeSystems\FileBundle\Service\GaufretteFileManager;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
@@ -31,12 +30,20 @@ class PlumTreeSystemsFileExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
-        $provider = $config['provider'];
+        $deprProvider = $config['provider'] ?? null;
 
-        if (!in_array($provider, PlumTreeSystemsFileBundle::$AVAILABLE_PROVIDERS)) {
-            throw new InvalidConfigurationException(
-                "PTSFileBundle bad configuration, configured provider does not exist: " . $provider
+        if (null !== $deprProvider) {
+            trigger_deprecation(
+                'plumtreesystems/file-bundle',
+                '2.3',
+                'Gaufrette manager is now deprecated and will be removed in the next major update'
             );
+
+            if (!in_array($deprProvider, PlumTreeSystemsFileBundle::$AVAILABLE_PROVIDERS)) {
+                throw new InvalidConfigurationException(
+                    "PTSFileBundle bad configuration, configured provider does not exist: " . $deprProvider
+                );
+            }
         }
         $fileClass = $config['file_class'];
         $replace = isset($config['replace_file']) ? $config['replace_file'] : false;
@@ -78,11 +85,13 @@ class PlumTreeSystemsFileExtension extends Extension
 
 
         // Gaufrette manager config
-        $providerConfig = $config['provider_configs'][$provider];
-        $prefixPath = $config['prefix_path'];
-        $container->setParameter('pts_file_provider', $provider);
-        $container->setParameter('pts_file_provider_settings', $providerConfig);
-        $container->setParameter('pts_file_prefix_path', $prefixPath);
+        if (null !== $deprProvider) {
+            $providerConfig = $config['provider_configs'][$deprProvider];
+            $prefixPath = $config['prefix_path'];
+            $container->setParameter('pts_file_provider', $deprProvider);
+            $container->setParameter('pts_file_provider_settings', $providerConfig);
+            $container->setParameter('pts_file_prefix_path', $prefixPath);
+        }
 
         $this->registerFormTheme($container);
     }

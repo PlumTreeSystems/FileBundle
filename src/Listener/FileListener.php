@@ -11,10 +11,12 @@ namespace PlumTreeSystems\FileBundle\Listener;
 
 use PlumTreeSystems\FileBundle\Entity\File;
 use PlumTreeSystems\FileBundle\Exception\FileAlreadyExistsException;
-use PlumTreeSystems\FileBundle\Model\FileManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * @deprecated 2.3 File Listener is deprecated and will be removed in 3.0
+ */
 class FileListener implements ContainerAwareInterface
 {
     /**

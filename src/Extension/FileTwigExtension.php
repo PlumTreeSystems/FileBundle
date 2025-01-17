@@ -47,6 +47,12 @@ class FileTwigExtension extends AbstractExtension
      */
     public function fileParser($data)
     {
+        trigger_deprecation(
+            'plumtreesystems/file-bundle',
+            '2.3',
+            'Twig Filter fileParser() is now deprecated'
+        );
+
         if (!is_a($data, File::class)) {
             throw new InparsableFileException();
         }
@@ -55,6 +61,11 @@ class FileTwigExtension extends AbstractExtension
 
     public function fileRemoveLink($data, $backUrl = '/')
     {
+        trigger_deprecation(
+            'plumtreesystems/file-bundle',
+            '2.3',
+            'Twig Filter fileRemoveLink() is now deprecated'
+        );
         return $this->fileManager->generateRemoveUrl($data, $backUrl);
     }
 }

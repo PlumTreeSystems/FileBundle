@@ -22,6 +22,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+/**
+ * @deprecated 2.3 Gaufrette manager is now deprecated and will be removed in 3.0
+ */
 class GaufretteFileManager implements FileManagerInterface
 {
     /**
