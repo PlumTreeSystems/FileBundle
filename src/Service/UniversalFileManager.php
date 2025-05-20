@@ -53,7 +53,7 @@ class UniversalFileManager implements FileManagerInterface
         $provider = $this->locator->get($this->defaultProvider);
         if (!$provider) {
             throw new ProviderNotFoundException(
-                "File provider $service was not found. Maybe forgot to tag with 'pts.file.provider'?"
+                "File provider default provider was not found. Maybe forgot to tag with 'pts.file.provider'?"
             );
         }
         return $provider;
@@ -72,8 +72,6 @@ class UniversalFileManager implements FileManagerInterface
         if (isset($id)) {
             if ($file->getUploadedFileReference() !== null) {
                 $this->remove($file);
-            } else {
-                return $file;
             }
         }
         $uploadedFile = $file->getUploadedFileReference();

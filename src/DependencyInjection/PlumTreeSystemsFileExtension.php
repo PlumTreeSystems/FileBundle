@@ -4,7 +4,6 @@ namespace PlumTreeSystems\FileBundle\DependencyInjection;
 
 use PlumTreeSystems\FileBundle\Provider\LocalFileProvider;
 use PlumTreeSystems\FileBundle\Provider\S3FileProvider;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Definition;

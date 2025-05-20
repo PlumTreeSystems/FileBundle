@@ -48,11 +48,6 @@ class S3FileProvider implements FileProviderInterface
 
         if (!$stream) {
             $ref = $file->getUploadedFileReference();
-
-            if (!$ref) {
-                throw new NoUploadedFileException("UploadedFileReference not attached to File");
-            }
-
             $stream = fopen($ref->getPathname(), 'r');
         }
 

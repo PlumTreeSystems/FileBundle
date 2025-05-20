@@ -20,6 +20,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('plum_tree_systems_file');
         $rootNode = $treeBuilder->getRootNode();
 
+        /** @phpstan-ignore method.notFound */
         $rootNode
             ->children()
                 ->arrayNode('path_map')
@@ -29,7 +30,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('provider')->isRequired()->end()
                         ->end()
                     ->end()
-                ->end()
+                ->end() // path_map
                 ->scalarNode('default_provider')->end()
                 ->arrayNode('generic_providers')
                     ->children()
@@ -44,7 +45,7 @@ class Configuration implements ConfigurationInterface
                                     ->scalarNode('prefix')->defaultValue('')->end()
                                 ->end()
                             ->end()
-                        ->end()
+                        ->end() // s3
                         ->arrayNode('local')
                             ->useAttributeAsKey('name')
                             ->arrayPrototype()
@@ -53,12 +54,11 @@ class Configuration implements ConfigurationInterface
                                     ->scalarNode('dir_url')->end()
                                 ->end()
                             ->end()
-                        ->end()
+                        ->end() // local
                     ->end()
-                ->end()
+                ->end() // generic_provicers
                 ->scalarNode('file_class')->isRequired()->end()
                 ->booleanNode('replace_file')->end()
-
             ->end();
 
         return $treeBuilder;

@@ -9,9 +9,7 @@
 
 namespace PlumTreeSystems\FileBundle\Tests\Service;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PlumTreeSystems\FileBundle\Model\FileManagerInterface;
 use PlumTreeSystems\FileBundle\Provider\LocalFileProvider;
 use PlumTreeSystems\FileBundle\Service\UniversalFileManager;
 use PlumTreeSystems\FileBundle\Tests\Service\FileManagerTest\TestFile;
@@ -21,14 +19,14 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class UniversalFileManagerTest extends TestCase
 {
     /**
-     * @var MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject
      */
     private $serviceLocator;
 
     private string $fileDir;
 
     /**
-     * @var FileManagerInterface
+     * @var \PlumTreeSystems\FileBundle\Model\FileManagerInterface
      */
     private $fileManager;
 

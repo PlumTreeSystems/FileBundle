@@ -25,4 +25,6 @@
             <property name="allowOnly" value="first" />
         </properties>
     </rule>
+
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses"/>
 </ruleset>

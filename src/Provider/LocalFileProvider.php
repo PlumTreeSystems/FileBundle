@@ -2,7 +2,6 @@
 
 namespace PlumTreeSystems\FileBundle\Provider;
 
-use Exception;
 use PlumTreeSystems\FileBundle\Entity\File;
 use PlumTreeSystems\FileBundle\Exception\NoUploadedFileException;
 
@@ -25,11 +24,6 @@ class LocalFileProvider implements FileProviderInterface
 
         if (!$stream) {
             $ref = $file->getUploadedFileReference();
-
-            if (!$ref) {
-                throw new NoUploadedFileException("UploadedFileReference not attached to File");
-            }
-
             $stream = fopen($ref->getPathname(), 'r');
         }
 
