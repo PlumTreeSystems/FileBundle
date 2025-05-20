@@ -8,7 +8,6 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
-        "doctrine/common": "^3.0",
         "gaufrette/aws-s3-adapter": "^0.4.0",
         "knplabs/gaufrette": "^0.11",
         "symfony/console": "^5.4|^6.2",
@@ -43,8 +42,6 @@
         }
     },
     "require-dev": {
-        "doctrine/doctrine-bundle": "^2.10",
-        "doctrine/orm": "^2.15",
         "phpunit/phpunit": "^10.0",
         "squizlabs/php_codesniffer": "3.7.2",
         "symfony/browser-kit": "^6.0",

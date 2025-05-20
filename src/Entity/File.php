@@ -16,10 +16,6 @@ abstract class File
     protected $originalName;
 
     protected $name;
-    // /**
-    //  * @var \Gaufrette\File
-    //  */
-    // private $fileReference;
 
     /**
      * @var UploadedFile
