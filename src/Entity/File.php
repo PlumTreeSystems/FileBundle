@@ -39,7 +39,7 @@ abstract class File
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -85,7 +85,7 @@ abstract class File
     /**
      * @return mixed
      */
-    public function getOriginalName()
+    public function getOriginalName(): mixed
     {
         return $this->originalName;
     }
@@ -109,12 +109,12 @@ abstract class File
     /**
      * @return mixed
      */
-    abstract public function getId();
+    abstract public function getId(): mixed;
 
     /**
      * @return UploadedFile
      */
-    public function getUploadedFileReference()
+    public function getUploadedFileReference(): UploadedFile
     {
         return $this->uploadedFileReference;
     }
@@ -150,7 +150,7 @@ abstract class File
     /**
      * @return mixed
      */
-    public function getDataStream()
+    public function getDataStream(): mixed
     {
         return $this->dataStream;
     }
