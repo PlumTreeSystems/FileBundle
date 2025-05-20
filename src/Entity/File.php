@@ -9,7 +9,6 @@
 
 namespace PlumTreeSystems\FileBundle\Entity;
 
-use PlumTreeSystems\FileBundle\Model\FileManagerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 abstract class File
@@ -17,10 +16,10 @@ abstract class File
     protected $originalName;
 
     protected $name;
-    /**
-     * @var \Gaufrette\File
-     */
-    private $fileReference;
+    // /**
+    //  * @var \Gaufrette\File
+    //  */
+    // private $fileReference;
 
     /**
      * @var UploadedFile
@@ -39,13 +38,6 @@ abstract class File
     public function __construct()
     {
         $this->context = json_encode([]);
-    }
-
-    public function updateFileReference(FileManagerInterface $fileManager)
-    {
-        trigger_deprecation("plumtreesystems/file-bundle", "2.1", "Update file reference is deprecated");
-        $this->fileReference = $fileManager->getFileReference($this);
-        return $this;
     }
 
     /**

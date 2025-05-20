@@ -56,42 +56,10 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
-                ->scalarNode('provider')->end()
-                ->arrayNode('provider_configs')
-                    ->children()
-                        ->arrayNode('local')
-                            ->children()
-                                ->scalarNode('directory')->end()
-                                ->scalarNode('web_root')->end()
-                            ->end()
-                        ->end()
-                        ->arrayNode('aws_s3')
-                            ->children()
-                                ->scalarNode('key')->end()
-                                ->scalarNode('secret')->end()
-                                ->scalarNode('bucket_name')->end()
-                                ->scalarNode('region')->end()
-                                ->scalarNode('version')->end()
-
-                            ->end()
-                        ->end()
-                        ->arrayNode('google_cloud_storage')
-                            ->children()
-                                ->scalarNode('google_bucket')->end()
-                                ->scalarNode('auth_config_json')->end()
-
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
                 ->scalarNode('file_class')->isRequired()->end()
-                ->scalarNode('prefix_path')->defaultValue('')->end()
                 ->booleanNode('replace_file')->end()
 
             ->end();
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
 
         return $treeBuilder;
     }

@@ -2,6 +2,7 @@ framework:
   test: true
   router:
     resource:
+  http_method_override: true
 
 plum_tree_systems_file:
   path_map:
@@ -27,15 +28,10 @@ plum_tree_systems_file:
         region: eu_west_2
         key: key
         secret: secret
-
-  provider: local
-  provider_configs:
-    local:
-      directory: '%kernel.project_dir%/public/files'
-      web_root: '/files'
   file_class: 'App\Document\File'
 
 
+# TODO file bundle remove
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
@@ -64,6 +60,7 @@ when@test:
             dbname_suffix: '_test%env(default::TEST_TOKEN)%'
 
 when@prod:
+    # TODO file bundle remove
     doctrine:
         orm:
             auto_generate_proxy_classes: false

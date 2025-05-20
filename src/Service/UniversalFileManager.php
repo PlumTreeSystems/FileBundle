@@ -4,15 +4,11 @@ namespace PlumTreeSystems\FileBundle\Service;
 
 use PlumTreeSystems\FileBundle\Entity\File;
 use PlumTreeSystems\FileBundle\Provider\FileProviderInterface;
-use Gaufrette\File as GaufretteFile;
 use PlumTreeSystems\FileBundle\Exception\ProviderNotFoundException;
 use PlumTreeSystems\FileBundle\Model\FileManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\TaggedLocator;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Polyfill\Intl\Icu\Exception\NotImplementedException;
 
 class UniversalFileManager implements FileManagerInterface
 {
@@ -28,7 +24,6 @@ class UniversalFileManager implements FileManagerInterface
         private array $fileProviderMap,
         private string $defaultProvider,
         private string $ptsFileExtendedEntity,
-        private UrlGeneratorInterface $router,
     ) {
     }
 
@@ -64,11 +59,6 @@ class UniversalFileManager implements FileManagerInterface
         return $provider;
     }
 
-    public function getFileReference(File $file): ?GaufretteFile
-    {
-        return null;
-    }
-
     public function read(File $file): string
     {
         $provider = $this->grabProvider($file);
@@ -101,60 +91,13 @@ class UniversalFileManager implements FileManagerInterface
         $file->addContext('filesize', $uploadedFile->getSize());
         $provider = $this->grabProvider($file);
         $provider->persist($file);
-        $file->updateFileReference($this);
         return $file;
-    }
-
-    public function getByName(string $name): File
-    {
-        throw new NotImplementedException('Deprecated');
-    }
-
-    public function getById($id): File
-    {
-        throw new NotImplementedException('Deprecated');
     }
 
     public function remove(File $file)
     {
         $provider = $this->grabProvider($file);
         $provider->remove($file);
-    }
-
-    public function removeEntity(File $file, $flush = false)
-    {
-        throw new NotImplementedException('Deprecated');
-    }
-
-    public function generateDownloadUrl(File $file): string
-    {
-
-        if ($file->getContextValue('public') === '1') {
-            $provider = $this->grabProvider($file);
-            return $provider->getRawRemoteUri($file);
-        }
-
-        $url = $this->router->generate(
-            'pts_file_download',
-            ['id' => $file->getId()]
-        );
-        return $url;
-    }
-
-    public function generateRemoveUrl(File $file, string $backUrl = null): string
-    {
-        $arr = [
-            'id' => $file->getId(),
-        ];
-        if ($backUrl && is_string($backUrl) && strlen($backUrl)) {
-            $arr['backUrl'] = urlencode($backUrl);
-        }
-        $url = $this->router->generate(
-            'pts_file_remove',
-            $arr
-        );
-
-        return $url;
     }
 
     public function createNewFile(): File
@@ -170,14 +113,9 @@ class UniversalFileManager implements FileManagerInterface
 
     public function downloadFile(File $file): Response
     {
-        $fileRef = $this->getFileReference($file);
-        if (!$fileRef) {
-            throw new NotFoundHttpException('File: "' . $file->getName() . '", was not found.');
-        }
         $response = new Response();
         $response->headers->set('Cache-Control', 'private');
         $response->headers->set('Content-Disposition', 'attachment; filename="' . $file->getOriginalName() . '";');
-        $response->headers->set('Content-length', $fileRef->getSize());
         $response->headers->set('Content-Type', 'application/force-download');
 
         $response->sendHeaders();

@@ -1,24 +1,26 @@
 services:
-    _instanceof:
-        PlumTreeSystems\FileBundle\Provider\FileProviderInterface:
-            tags: ['pts.file.provider']
+    # TODO file bundle remove
+    # _instanceof:
+    #     PlumTreeSystems\FileBundle\Provider\FileProviderInterface:
+    #         tags: ['pts.file.provider']
     _defaults:
         autowire: true
         bind:
             $ptsFileExtendedEntity: '%pts_file_extended_entity%'
 
-    pts_file.filesystem.factory:
-        class: PlumTreeSystems\FileBundle\Service\FileSystemFactory
-        arguments: ['%pts_file_provider%', '%pts_file_provider_settings%']
-        public: true
+    # TODO file bundle remove
+    # pts_file.filesystem.factory:
+    #     class: PlumTreeSystems\FileBundle\Service\FileSystemFactory
+    #     arguments: ['%pts_file_provider%', '%pts_file_provider_settings%']
+    #     public: true
 
-    PlumTreeSystems\FileBundle\Service\FileSystemFactoryInterface:
-        alias: pts_file.filesystem.factory
+    # PlumTreeSystems\FileBundle\Service\FileSystemFactoryInterface:
+    #     alias: pts_file.filesystem.factory
 
-    pts_file.manager:
-        class: PlumTreeSystems\FileBundle\Service\GaufretteFileManager
-        arguments: ['@pts_file.filesystem.factory', '@doctrine.orm.entity_manager', '@router', '@request_stack', '%pts_file_provider_settings%', '%pts_file_extended_entity%', '%pts_file_provider%']
-        public: true
+    # pts_file.manager:
+    #     class: PlumTreeSystems\FileBundle\Service\GaufretteFileManager
+    #     arguments: ['@pts_file.filesystem.factory', '@doctrine.orm.entity_manager', '@router', '@request_stack', '%pts_file_provider_settings%', '%pts_file_extended_entity%', '%pts_file_provider%']
+    #     public: true
 
     PlumTreeSystems\FileBundle\Service\UniversalFileManager:
         class: PlumTreeSystems\FileBundle\Service\UniversalFileManager
@@ -27,8 +29,9 @@ services:
             $fileProviderMap: '%pts_file_path_map%'
             $defaultProvider: '%pts_file_default_provider%'
 
-    PlumTreeSystems\FileBundle\Model\FileManagerInterface:
-        alias: pts_file.manager
+    # TODO file bundle remove
+    # PlumTreeSystems\FileBundle\Model\FileManagerInterface:
+    #     alias: pts_file.manager
 
     pts_file.security.manager:
         class: PlumTreeSystems\FileBundle\Security\SecurityManager
@@ -42,35 +45,36 @@ services:
         tags: [pts_file.security_provider]
         public: true
 
-    pts_file.twig.extension:
-        class: PlumTreeSystems\FileBundle\Extension\FileTwigExtension
-        arguments: ['@pts_file.manager']
-        tags: ['twig.extension']
-        public: true
+    # TODO file bundle remove
+    # pts_file.twig.extension:
+    #     class: PlumTreeSystems\FileBundle\Extension\FileTwigExtension
+    #     arguments: ['@pts_file.manager']
+    #     tags: ['twig.extension']
+    #     public: true
 
-    pts_file.form.transformer:
-        class: PlumTreeSystems\FileBundle\Form\Transformer\PTSFileTransformer
-        arguments: ['@pts_file.manager', '%pts_file_provider_settings%']
-        public: true
+    # pts_file.form.transformer:
+    #     class: PlumTreeSystems\FileBundle\Form\Transformer\PTSFileTransformer
+    #     arguments: ['@pts_file.manager', '%pts_file_provider_settings%']
+    #     public: true
 
-    pts_file.form.type:
-        class: PlumTreeSystems\FileBundle\Form\Type\PTSFileType
-        arguments: ['@pts_file.form.transformer', '@pts_file.manager']
-        tags:
-          - { name: 'form.type', alias: 'pts_file' }
-        public: true
+    # pts_file.form.type:
+    #     class: PlumTreeSystems\FileBundle\Form\Type\PTSFileType
+    #     arguments: ['@pts_file.form.transformer', '@pts_file.manager']
+    #     tags:
+    #       - { name: 'form.type', alias: 'pts_file' }
+    #     public: true
 
-    pts_file.form.extension:
-        class: PlumTreeSystems\FileBundle\Form\Extension\PTSTypeExtension
-        arguments: ['@pts_file.form.transformer']
-        tags:
-          - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FileType }
-        public: true
+    # pts_file.form.extension:
+    #     class: PlumTreeSystems\FileBundle\Form\Extension\PTSTypeExtension
+    #     arguments: ['@pts_file.form.transformer']
+    #     tags:
+    #       - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FileType }
+    #     public: true
 
-    pts_file.listener:
-        class: PlumTreeSystems\FileBundle\Listener\FileListener
-        tags:
-            - { name: doctrine.orm.entity_listener, entity: PlumTreeSystems\FileBundle\Entity\File, event: prePersist }
-            - { name: doctrine.orm.entity_listener, entity: PlumTreeSystems\FileBundle\Entity\File, event: preUpdate }
-        arguments: ['@service_container', '%pts_file_replace%']
-        public: true
+    # pts_file.listener:
+    #     class: PlumTreeSystems\FileBundle\Listener\FileListener
+    #     tags:
+    #         - { name: doctrine.orm.entity_listener, entity: PlumTreeSystems\FileBundle\Entity\File, event: prePersist }
+    #         - { name: doctrine.orm.entity_listener, entity: PlumTreeSystems\FileBundle\Entity\File, event: preUpdate }
+    #     arguments: ['@service_container', '%pts_file_replace%']
+    #     public: true

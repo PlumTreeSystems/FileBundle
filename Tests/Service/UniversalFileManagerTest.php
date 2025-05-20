@@ -9,39 +9,23 @@
 
 namespace PlumTreeSystems\FileBundle\Tests\Service;
 
-use Doctrine\Persistence\ObjectRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PlumTreeSystems\FileBundle\Entity\File;
 use PlumTreeSystems\FileBundle\Model\FileManagerInterface;
-use PlumTreeSystems\FileBundle\Model\FileSystemFactoryInterface;
 use PlumTreeSystems\FileBundle\Provider\LocalFileProvider;
-use PlumTreeSystems\FileBundle\Service\FileSystemFactory;
 use PlumTreeSystems\FileBundle\Service\UniversalFileManager;
 use PlumTreeSystems\FileBundle\Tests\Service\FileManagerTest\TestFile;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class UniversalFileManagerTest extends TestCase
 {
     /**
      * @var MockObject
      */
-    private $entityManager;
-
-    /**
-     * @var MockObject
-     */
     private $serviceLocator;
 
     private string $fileDir;
-
-    /**
-     * @var MockObject
-     */
-    private $router;
 
     /**
      * @var FileManagerInterface
@@ -64,16 +48,9 @@ class UniversalFileManagerTest extends TestCase
 
     public function setUp(): void
     {
-
         $this->createdFiles = [];
 
         $this->fileDir = sys_get_temp_dir() . '/file_provider';
-
-        $this->entityManager = $this
-            ->getMockBuilder(\Doctrine\Persistence\ObjectManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
 
         $this->serviceLocator = $this->getMockBuilder(ServiceLocator::class)
             ->disableOriginalConstructor()
@@ -81,12 +58,7 @@ class UniversalFileManagerTest extends TestCase
         $this->serviceLocator->method('get')
             ->willReturn(new LocalFileProvider($this->fileDir, 'https://test.com'));
 
-        $this->router = $this->getMockBuilder(UrlGeneratorInterface::class)
-            ->getMock();
-        $this->router->method('generate')
-            ->willReturnCallback(fn($route, $args) => 'https://test.com/download/' . $args['id']);
-
-        $this->fileManager = $this->buildFileManager($filesystemFactory);
+        $this->fileManager = $this->buildFileManager();
     }
 
     private function buildFileManager(): UniversalFileManager
@@ -96,7 +68,6 @@ class UniversalFileManagerTest extends TestCase
             ['local/location' => 'local_1'],
             'local_1',
             TestFile::class,
-            $this->router,
         );
     }
 
@@ -109,7 +80,7 @@ class UniversalFileManagerTest extends TestCase
             unlink($file->getPathname());
         }
         $this->createdFiles = null;
-        unlink($this->fileDir);
+        rmdir($this->fileDir);
     }
 
     public function testManger()
@@ -121,14 +92,11 @@ class UniversalFileManagerTest extends TestCase
         $file->setPath('local/location');
         $file->setName('test.txt');
         $this->fileManager->save($file);
+
         $this->assertTrue(file_exists($this->fileDir . '/local/location/test.txt'));
         // read
         $this->assertEquals('data', $this->fileManager->read($file));
-        // generateDownloadUrl
-        $file->setId(1);
-        $this->assertEquals('https://test.com/download/1', $this->fileManager->generateDownloadUrl($file));
-        $file->addContext('public', 1);
-        $this->assertEquals('https://test.com/local/location/test.txt', $this->fileManager->generateDownloadUrl($file));
+
         // create streamable uri
         $this->assertEquals(
             'file://' . $this->fileDir . '/local/location/test.txt',

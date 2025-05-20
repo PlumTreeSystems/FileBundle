@@ -1,11 +1,9 @@
-version: '3.4'
-
 services:
   app:
+    container_name: pts_filebundle
     build:
       context: ./
       dockerfile: Dockerfile
     entrypoint: ['tail', '-f', '/dev/null']
     volumes:
       - .:/app
-  
