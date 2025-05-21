@@ -12,7 +12,7 @@
         "symfony/console": "^6.0 | ^7.0",
         "symfony/deprecation-contracts": "^2.5|^3.3",
         "symfony/dotenv": "^6.0 | ^7.0",
-        "symfony/flex": "^2",
+        "symfony/flex": "^1.21 | ^2",
         "symfony/form": "^6.0 | ^7.0",
         "symfony/framework-bundle": "^6.0 | ^7.0",
         "symfony/mime": "^6.0 | ^7.0",
