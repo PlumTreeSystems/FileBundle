@@ -9,17 +9,17 @@
         "ext-iconv": "*",
         "ext-json": "*",
         "aws/aws-sdk-php": "^3.0",
-        "symfony/console": "^7.2",
+        "symfony/console": "^6.0 | ^7.0",
         "symfony/deprecation-contracts": "^2.5|^3.3",
-        "symfony/dotenv": "^7.2",
+        "symfony/dotenv": "^6.0 | ^7.0",
         "symfony/flex": "^2",
-        "symfony/form": "^7.2",
-        "symfony/framework-bundle": "^7.2",
-        "symfony/mime": "^7.2",
-        "symfony/security-bundle": "^7.2",
-        "symfony/twig-bundle": "^7.2",
-        "symfony/validator": "^7.2",
-        "symfony/yaml": "^7.2"
+        "symfony/form": "^6.0 | ^7.0",
+        "symfony/framework-bundle": "^6.0 | ^7.0",
+        "symfony/mime": "^6.0 | ^7.0",
+        "symfony/security-bundle": "^6.0 | ^7.0",
+        "symfony/twig-bundle": "^6.0 | ^7.0",
+        "symfony/validator": "^6.0 | ^7.0",
+        "symfony/yaml": "^6.0 | ^7.0"
     },
     "config": {
         "preferred-install": {
