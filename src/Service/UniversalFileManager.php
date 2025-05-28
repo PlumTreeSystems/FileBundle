@@ -7,6 +7,7 @@ use PlumTreeSystems\FileBundle\Provider\FileProviderInterface;
 use PlumTreeSystems\FileBundle\Exception\ProviderNotFoundException;
 use PlumTreeSystems\FileBundle\Model\FileManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
+use Symfony\Component\DependencyInjection\Attribute\TaggedLocator;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,7 +20,7 @@ class UniversalFileManager implements FileManagerInterface
     protected iterable $fileProviders;
 
     public function __construct(
-        #[AutowireLocator('pts.file.provider')]
+        #[TaggedLocator('pts.file.provider')]
         private ServiceLocator $locator,
         private array $fileProviderMap,
         private string $defaultProvider,
