@@ -28,18 +28,18 @@ class SecurityManager
         $this->securityProviders = [];
     }
 
-    public function addSecurityProvider(FileSecurityProviderInterface $provider)
+    public function addSecurityProvider(FileSecurityProviderInterface $provider): void
     {
         $this->securityProviders[] = $provider;
     }
 
-    public function checkPermissions(?UserInterface $user = null, File $file)
+    public function checkPermissions(File $file, ?UserInterface $user = null): bool
     {
         foreach ($this->securityProviders as $securityProvider) {
             /**
              * @var FileSecurityProviderInterface $securityProvider
              */
-            if (!$securityProvider->hasPermission($user, $file)) {
+            if (!$securityProvider->hasPermission($file, $user)) {
                 return false;
             }
         }

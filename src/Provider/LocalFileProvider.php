@@ -3,7 +3,6 @@
 namespace PlumTreeSystems\FileBundle\Provider;
 
 use PlumTreeSystems\FileBundle\Entity\File;
-use PlumTreeSystems\FileBundle\Exception\NoUploadedFileException;
 
 class LocalFileProvider implements FileProviderInterface
 {
@@ -18,7 +17,7 @@ class LocalFileProvider implements FileProviderInterface
         return $this->pubDirUrl . '/' . $file->getPath() . '/' . $file->getName();
     }
 
-    public function persist(File $file)
+    public function persist(File $file): void
     {
         $stream = $file->getDataStream();
 
@@ -55,7 +54,7 @@ class LocalFileProvider implements FileProviderInterface
         fclose($newFile);
     }
 
-    public function remove(File $file)
+    public function remove(File $file): void
     {
         $location = $this->dir . '/' . $file->getPath() . '/' . $file->getName();
         unlink($location);

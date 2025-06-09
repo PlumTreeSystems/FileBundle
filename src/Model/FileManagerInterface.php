@@ -17,7 +17,7 @@ interface FileManagerInterface
 
     public function save(\PlumTreeSystems\FileBundle\Entity\File $file): \PlumTreeSystems\FileBundle\Entity\File;
 
-    public function remove(\PlumTreeSystems\FileBundle\Entity\File $file);
+    public function remove(\PlumTreeSystems\FileBundle\Entity\File $file): void;
 
     public function createNewFile(): \PlumTreeSystems\FileBundle\Entity\File;
 
@@ -25,5 +25,8 @@ interface FileManagerInterface
 
     public function downloadFile(\PlumTreeSystems\FileBundle\Entity\File $file): Response;
 
-    public function getProviderSettings();
+    /**
+     * @return array<mixed>
+     */
+    public function getProviderSettings(): array;
 }

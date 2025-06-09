@@ -7,7 +7,6 @@ use PlumTreeSystems\FileBundle\Provider\FileProviderInterface;
 use PlumTreeSystems\FileBundle\Exception\ProviderNotFoundException;
 use PlumTreeSystems\FileBundle\Model\FileManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
-use Symfony\Component\DependencyInjection\Attribute\TaggedLocator;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,8 +18,12 @@ class UniversalFileManager implements FileManagerInterface
      */
     protected iterable $fileProviders;
 
+    /**
+     * @param ServiceLocator<FileProviderInterface> $locator
+     * @param array<string, string> $fileProviderMap
+     */
     public function __construct(
-        #[TaggedLocator('pts.file.provider')]
+        #[AutowireLocator('pts.file.provider')]
         private ServiceLocator $locator,
         private array $fileProviderMap,
         private string $defaultProvider,
@@ -87,13 +90,13 @@ class UniversalFileManager implements FileManagerInterface
             $file->setName($hashName);
         }
         $file->addContext('Content-Type', $uploadedFile->getMimeType());
-        $file->addContext('filesize', $uploadedFile->getSize());
+        $file->addContext('filesize', (string)$uploadedFile->getSize());
         $provider = $this->grabProvider($file);
         $provider->persist($file);
         return $file;
     }
 
-    public function remove(File $file)
+    public function remove(File $file): void
     {
         $provider = $this->grabProvider($file);
         $provider->remove($file);
@@ -131,11 +134,14 @@ class UniversalFileManager implements FileManagerInterface
         return $provider->getAuthorizedRemoteUri($file);
     }
 
-    public function getProviderSettings()
+    public function getProviderSettings(): array
     {
         return [];
     }
 
+    /**
+     * @return array<string>
+     */
     public function getSupportedProviders(): array
     {
         return array_keys($this->locator->getProvidedServices());

@@ -14,7 +14,7 @@ use PlumTreeSystems\FileBundle\Entity\File;
 class InparsableFileException extends FileException
 {
     public function __construct(
-        $message = 'Function expected a child of "' . File::class . '"'
+        string $message = 'Function expected a child of "' . File::class . '"'
     ) {
         parent::__construct($message);
     }

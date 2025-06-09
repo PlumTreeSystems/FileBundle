@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class DefaultFileSecurityProvider implements FileSecurityProviderInterface
 {
-    public function hasPermission(?UserInterface $user = null, File $file): bool
+    public function hasPermission(File $file, ?UserInterface $user = null): bool
     {
         return true;
     }

@@ -13,20 +13,17 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 abstract class File
 {
-    protected $originalName;
+    protected string $originalName;
 
-    protected $name;
+    protected string $name;
 
-    /**
-     * @var UploadedFile
-     */
-    private $uploadedFileReference;
+    private UploadedFile $uploadedFileReference;
 
-    protected $context;
+    protected string $context;
 
     protected string $path = '';
 
-    protected $dataStream = null;
+    protected mixed $dataStream = null;
 
     /**
      * File constructor.
@@ -36,37 +33,31 @@ abstract class File
         $this->context = json_encode([]);
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function addContext(string $key, string $value)
+    public function addContext(string $key, string $value): void
     {
         $currentContext = $this->getContext();
         $currentContext[$key] = $value;
         $this->setContext(json_encode($currentContext));
     }
 
-    public function removeContext(string $key)
+    public function removeContext(string $key): void
     {
         $currentContext = $this->getContext();
         unset($currentContext[$key]);
         $this->setContext(json_encode($currentContext));
     }
 
-    public function getContextValue(string $key)
+    public function getContextValue(string $key): ?string
     {
         $currentContext = $this->getContext();
         return isset($currentContext[$key])
@@ -75,54 +66,36 @@ abstract class File
     }
 
     /**
-     * @return array
+     * @return array<string, string>
      */
     public function getContext(): array
     {
         return json_decode($this->context, true);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getOriginalName(): mixed
+    public function getOriginalName(): string
     {
         return $this->originalName;
     }
 
-    /**
-     * @param mixed $originalName
-     */
-    public function setOriginalName($originalName)
+    public function setOriginalName(string $originalName): void
     {
         $this->originalName = $originalName;
     }
 
-    /**
-     * @param string $context
-     */
-    private function setContext($context)
+    private function setContext(string $context): void
     {
         $this->context = $context;
     }
 
-    /**
-     * @return mixed
-     */
     abstract public function getId(): mixed;
 
-    /**
-     * @return UploadedFile
-     */
     public function getUploadedFileReference(): UploadedFile
     {
         return $this->uploadedFileReference;
     }
 
-    /**
-     * @param UploadedFile $uploadedFileReference
-     */
-    public function setUploadedFileReference($uploadedFileReference)
+    public function setUploadedFileReference(UploadedFile $uploadedFileReference): void
     {
         $this->uploadedFileReference = $uploadedFileReference;
     }
@@ -138,18 +111,12 @@ abstract class File
         return $this;
     }
 
-    /**
-     * @param $dataStream mixed
-     */
-    public function setDataStream($dataStream): self
+    public function setDataStream(mixed $dataStream): self
     {
         $this->dataStream = $dataStream;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getDataStream(): mixed
     {
         return $this->dataStream;
