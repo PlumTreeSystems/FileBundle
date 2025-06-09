@@ -33,7 +33,7 @@ class SecurityManager
         $this->securityProviders[] = $provider;
     }
 
-    public function checkPermissions(UserInterface $user = null, File $file)
+    public function checkPermissions(?UserInterface $user = null, File $file)
     {
         foreach ($this->securityProviders as $securityProvider) {
             /**
