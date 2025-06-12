@@ -4,7 +4,6 @@ namespace PlumTreeSystems\FileBundle\Provider;
 
 use Aws\S3\S3Client;
 use PlumTreeSystems\FileBundle\Entity\File;
-use PlumTreeSystems\FileBundle\Exception\NoUploadedFileException;
 
 class S3FileProvider implements FileProviderInterface
 {
@@ -12,6 +11,9 @@ class S3FileProvider implements FileProviderInterface
     protected string $bucket;
     protected string $prefix = '';
 
+    /**
+     * @param array{credentials:array{key:string,secret:string},region:string,bucket:string,prefix:string} $s3Config
+     */
     public function __construct(array $s3Config)
     {
         $this->client = new S3Client([
@@ -31,7 +33,7 @@ class S3FileProvider implements FileProviderInterface
         return $this->client;
     }
 
-    public function getAuthorizedRemoteUri(File $file): ?string
+    public function getAuthorizedRemoteUri(File $file): string
     {
         [$bucket, $key] = $this->extractBucketAndKey($file);
         $cmd = $this->client->getCommand('GetObject', [
@@ -42,17 +44,12 @@ class S3FileProvider implements FileProviderInterface
         return (string) $req->getUri();
     }
 
-    public function persist(File $file)
+    public function persist(File $file): void
     {
         $stream = $file->getDataStream();
 
         if (!$stream) {
             $ref = $file->getUploadedFileReference();
-
-            if (!$ref) {
-                throw new NoUploadedFileException("UploadedFileReference not attached to File");
-            }
-
             $stream = fopen($ref->getPathname(), 'r');
         }
 
@@ -60,7 +57,7 @@ class S3FileProvider implements FileProviderInterface
         $this->client->upload($bucket, $key, $stream);
     }
 
-    public function remove(File $file)
+    public function remove(File $file): void
     {
         [$bucket, $key] = $this->extractBucketAndKey($file);
         $this->client->deleteObject(['Bucket' => $bucket, 'Key' => $key]);
@@ -80,7 +77,10 @@ class S3FileProvider implements FileProviderInterface
         return $this->client->getObjectUrl($bucket, $key);
     }
 
-    protected function extractBucketAndKey(File $file)
+    /**
+     * @return array{string, string}
+     */
+    protected function extractBucketAndKey(File $file): array
     {
         $toJoin = [$file->getName()];
 

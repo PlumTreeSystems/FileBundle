@@ -2,26 +2,24 @@
     "name": "plumtreesystems/file-bundle",
     "type": "symfony-bundle",
     "license": "MIT",
-    "version": "2.3.0",
+    "version": "3.0.0",
     "require": {
-        "php": ">=8.0",
+        "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
-        "doctrine/common": "^3.0",
-        "gaufrette/aws-s3-adapter": "^0.4.0",
-        "knplabs/gaufrette": "^0.11",
-        "symfony/console": "^5.4|^6.2",
-        "symfony/deprecation-contracts": "^2.5|^3.3",
-        "symfony/dotenv": "^5.4|^6.2",
-        "symfony/flex": "^1.21|^2",
-        "symfony/form": "^5.4|^6.2",
-        "symfony/framework-bundle": "^5.4|^6.2",
-        "symfony/mime": "^5.4|^6.2",
-        "symfony/security-bundle": "^5.4|^6.2",
-        "symfony/twig-bundle": "^5.4|^6.2",
-        "symfony/validator": "^5.4|^6.2",
-        "symfony/yaml": "^5.4|^6.2"
+        "aws/aws-sdk-php": "^3.0",
+        "symfony/console": "^7.2",
+        "symfony/deprecation-contracts": "^3.3",
+        "symfony/dotenv": "^7.2",
+        "symfony/flex": "^2",
+        "symfony/form": "^7.2",
+        "symfony/framework-bundle": "^7.2",
+        "symfony/mime": "^7.2",
+        "symfony/security-bundle": "^7.2",
+        "symfony/twig-bundle": "^7.2",
+        "symfony/validator": "^7.2",
+        "symfony/yaml": "^7.2"
     },
     "config": {
         "preferred-install": {
@@ -29,6 +27,7 @@
         },
         "sort-packages": true,
         "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
             "symfony/flex": true
         }
     },
@@ -43,18 +42,24 @@
         }
     },
     "require-dev": {
-        "doctrine/doctrine-bundle": "^2.10",
-        "doctrine/orm": "^2.15",
+        "phpstan/phpstan": "^1.11",
+        "phpstan/phpstan-deprecation-rules": "^1.2",
+        "phpstan/phpstan-symfony": "^1.2",
         "phpunit/phpunit": "^10.0",
+        "slevomat/coding-standard": "^8.11",
         "squizlabs/php_codesniffer": "3.7.2",
-        "symfony/browser-kit": "^6.0",
-        "symfony/css-selector": "^6.0",
-        "symfony/phpunit-bridge": "^6.0"
+        "symfony/browser-kit": "^7.2",
+        "symfony/css-selector": "^7.2"
     },
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        }
+    },
+    "extra": {
+        "symfony": {
+            "require": "7.2.*"
         }
     }
 }

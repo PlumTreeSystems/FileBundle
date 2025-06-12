@@ -9,76 +9,62 @@
 
 namespace PlumTreeSystems\FileBundle\Entity;
 
-use PlumTreeSystems\FileBundle\Model\FileManagerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 abstract class File
 {
-    protected $originalName;
+    protected string $originalName;
 
-    protected $name;
-    /**
-     * @var \Gaufrette\File
-     */
-    private $fileReference;
+    protected string $name;
 
-    /**
-     * @var UploadedFile
-     */
-    private $uploadedFileReference;
+    private UploadedFile $uploadedFileReference;
 
-    protected $context;
+    protected string $context;
 
     protected string $path = '';
 
-    protected $dataStream = null;
+    protected mixed $dataStream = null;
 
-    /**
-     * File constructor.
-     */
     public function __construct()
     {
-        $this->context = json_encode([]);
+        $this->context = '[]';
     }
 
-    public function updateFileReference(FileManagerInterface $fileManager)
-    {
-        trigger_deprecation("plumtreesystems/file-bundle", "2.1", "Update file reference is deprecated");
-        $this->fileReference = $fileManager->getFileReference($this);
-        return $this;
-    }
+    abstract public function getId(): mixed;
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function addContext(string $key, string $value)
+    /**
+     * @throws \JsonException
+     */
+    public function addContext(string $key, string $value): void
     {
         $currentContext = $this->getContext();
         $currentContext[$key] = $value;
-        $this->setContext(json_encode($currentContext));
+
+        $newContext = json_encode($currentContext);
+        $this->setContext(json_encode($currentContext, JSON_THROW_ON_ERROR));
     }
 
-    public function removeContext(string $key)
+    /**
+     * @throws \JsonException
+     */
+    public function removeContext(string $key): void
     {
         $currentContext = $this->getContext();
         unset($currentContext[$key]);
-        $this->setContext(json_encode($currentContext));
+        $this->setContext(json_encode($currentContext, JSON_THROW_ON_ERROR));
     }
 
-    public function getContextValue(string $key)
+    public function getContextValue(string $key): ?string
     {
         $currentContext = $this->getContext();
         return isset($currentContext[$key])
@@ -87,54 +73,35 @@ abstract class File
     }
 
     /**
-     * @return array
+     * @return array<string, string>
+     * @throws \JsonException
      */
     public function getContext(): array
     {
-        return json_decode($this->context, true);
+        $context = json_decode($this->context, true);
+        if (!is_array($context)) {
+            throw new \JsonException('Context is not a valid JSON object');
+        }
+        /** @var array<string, string> */
+        return $context;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getOriginalName()
+    public function getOriginalName(): string
     {
         return $this->originalName;
     }
 
-    /**
-     * @param mixed $originalName
-     */
-    public function setOriginalName($originalName)
+    public function setOriginalName(string $originalName): void
     {
         $this->originalName = $originalName;
     }
 
-    /**
-     * @param string $context
-     */
-    private function setContext($context)
-    {
-        $this->context = $context;
-    }
-
-    /**
-     * @return mixed
-     */
-    abstract public function getId();
-
-    /**
-     * @return UploadedFile
-     */
-    public function getUploadedFileReference()
+    public function getUploadedFileReference(): UploadedFile
     {
         return $this->uploadedFileReference;
     }
 
-    /**
-     * @param UploadedFile $uploadedFileReference
-     */
-    public function setUploadedFileReference($uploadedFileReference)
+    public function setUploadedFileReference(UploadedFile $uploadedFileReference): void
     {
         $this->uploadedFileReference = $uploadedFileReference;
     }
@@ -150,20 +117,19 @@ abstract class File
         return $this;
     }
 
-    /**
-     * @param $dataStream mixed
-     */
-    public function setDataStream($dataStream): self
+    public function setDataStream(mixed $dataStream): self
     {
         $this->dataStream = $dataStream;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDataStream()
+    public function getDataStream(): mixed
     {
         return $this->dataStream;
+    }
+
+    private function setContext(string $context): void
+    {
+        $this->context = $context;
     }
 }

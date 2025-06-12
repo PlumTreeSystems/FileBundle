@@ -2,9 +2,7 @@
 
 namespace PlumTreeSystems\FileBundle\Provider;
 
-use Exception;
 use PlumTreeSystems\FileBundle\Entity\File;
-use PlumTreeSystems\FileBundle\Exception\NoUploadedFileException;
 
 class LocalFileProvider implements FileProviderInterface
 {
@@ -14,25 +12,23 @@ class LocalFileProvider implements FileProviderInterface
     ) {
     }
 
-    public function getAuthorizedRemoteUri(File $file): ?string
+    public function getAuthorizedRemoteUri(File $file): string
     {
         return $this->pubDirUrl . '/' . $file->getPath() . '/' . $file->getName();
     }
 
-    public function persist(File $file)
+    public function persist(File $file): void
     {
         $stream = $file->getDataStream();
 
         if (!$stream) {
             $ref = $file->getUploadedFileReference();
-
-            if (!$ref) {
-                throw new NoUploadedFileException("UploadedFileReference not attached to File");
-            }
-
             $stream = fopen($ref->getPathname(), 'r');
+            if (false === $stream) {
+                throw new \Exception("Failed to open stream for file reference " . $ref->getPathname());
+            }
         }
-
+        /** @var resource $stream */
 
         if (!file_exists($this->dir)) {
             mkdir(
@@ -61,7 +57,7 @@ class LocalFileProvider implements FileProviderInterface
         fclose($newFile);
     }
 
-    public function remove(File $file)
+    public function remove(File $file): void
     {
         $location = $this->dir . '/' . $file->getPath() . '/' . $file->getName();
         unlink($location);

@@ -47,14 +47,16 @@ class LocalFileProviderTest extends KernelTestCase
     {
         $file = $this->createTestFile();
         $upload = $this->createTestUploadFile("test");
+
         $file->setUploadedFileReference($upload);
         $this->provider->persist($file);
+
         $this->assertTrue(file_exists($this->dir . '/test.txt'));
+        $this->createdFiles[] = new UploadedFile($this->dir . '/test.txt', 'test.txt');
     }
 
     public function tearDown(): void
     {
-
         foreach ($this->createdFiles as $file) {
             /**
              * @var UploadedFile $file

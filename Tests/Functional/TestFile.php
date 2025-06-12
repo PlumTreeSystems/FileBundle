@@ -6,7 +6,7 @@ use PlumTreeSystems\FileBundle\Entity\File;
 
 class TestFile extends File
 {
-    public function getId()
+    public function getId(): mixed
     {
         return null;
     }

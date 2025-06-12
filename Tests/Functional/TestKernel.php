@@ -17,7 +17,6 @@ class TestKernel extends Kernel
     {
         return [
             new FrameworkBundle(),
-            new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new \PlumTreeSystems\FileBundle\PlumTreeSystemsFileBundle(),
         ];
     }

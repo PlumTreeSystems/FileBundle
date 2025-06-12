@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.245.2/containers/docker-existing-dockerfile
 {
-	"name": "app dev container",
+	"name": "filebundle dev container",
 
 	// Update the 'dockerComposeFile' list if you have more compose files or use different names.
 	// The .devcontainer/docker-compose.yml file contains any overrides you need/want to make.
@@ -27,7 +27,8 @@
 				"valeryanm.vscode-phpsab",
 				"joelwmale.vscode-codeception",
 				"ryanluker.vscode-coverage-gutters",
-				"persoderlind.vscode-phpcbf"
+				"persoderlind.vscode-phpcbf",
+				"Gruntfuggly.todo-tree"
 			]
 		}
 	}
