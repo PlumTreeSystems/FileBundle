@@ -25,13 +25,12 @@ abstract class File
 
     protected mixed $dataStream = null;
 
-    /**
-     * File constructor.
-     */
     public function __construct()
     {
-        $this->context = json_encode([]);
+        $this->context = '[]';
     }
+
+    abstract public function getId(): mixed;
 
     public function getName(): string
     {
@@ -43,18 +42,26 @@ abstract class File
         $this->name = $name;
     }
 
+    /**
+     * @throws \JsonException
+     */
     public function addContext(string $key, string $value): void
     {
         $currentContext = $this->getContext();
         $currentContext[$key] = $value;
-        $this->setContext(json_encode($currentContext));
+
+        $newContext = json_encode($currentContext);
+        $this->setContext(json_encode($currentContext, JSON_THROW_ON_ERROR));
     }
 
+    /**
+     * @throws \JsonException
+     */
     public function removeContext(string $key): void
     {
         $currentContext = $this->getContext();
         unset($currentContext[$key]);
-        $this->setContext(json_encode($currentContext));
+        $this->setContext(json_encode($currentContext, JSON_THROW_ON_ERROR));
     }
 
     public function getContextValue(string $key): ?string
@@ -67,10 +74,16 @@ abstract class File
 
     /**
      * @return array<string, string>
+     * @throws \JsonException
      */
     public function getContext(): array
     {
-        return json_decode($this->context, true);
+        $context = json_decode($this->context, true);
+        if (!is_array($context)) {
+            throw new \JsonException('Context is not a valid JSON object');
+        }
+        /** @var array<string, string> */
+        return $context;
     }
 
     public function getOriginalName(): string
@@ -82,13 +95,6 @@ abstract class File
     {
         $this->originalName = $originalName;
     }
-
-    private function setContext(string $context): void
-    {
-        $this->context = $context;
-    }
-
-    abstract public function getId(): mixed;
 
     public function getUploadedFileReference(): UploadedFile
     {
@@ -120,5 +126,10 @@ abstract class File
     public function getDataStream(): mixed
     {
         return $this->dataStream;
+    }
+
+    private function setContext(string $context): void
+    {
+        $this->context = $context;
     }
 }

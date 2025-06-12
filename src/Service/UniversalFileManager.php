@@ -19,7 +19,7 @@ class UniversalFileManager implements FileManagerInterface
     protected iterable $fileProviders;
 
     /**
-     * @param ServiceLocator<FileProviderInterface> $locator
+     * @param ServiceLocator<null|FileProviderInterface> $locator
      * @param array<string, string> $fileProviderMap
      */
     public function __construct(
@@ -67,29 +67,31 @@ class UniversalFileManager implements FileManagerInterface
     {
         $provider = $this->grabProvider($file);
         $uri = $provider->getStreamableUri($file);
-        return file_get_contents($uri);
+        return file_get_contents($uri) ?: '';
     }
 
     public function save(File $file, bool $uniqueName = true): File
     {
         $id = $file->getId();
         if (isset($id)) {
-            if ($file->getUploadedFileReference() !== null) {
-                $this->remove($file);
-            }
+            $this->remove($file);
         }
         $uploadedFile = $file->getUploadedFileReference();
         $hashName = md5(time() . uniqid());
 
         $file->setOriginalName($uploadedFile->getClientOriginalName());
         if ($file->getContextValue('saveExt')) {
-            ['extension' => $extension ] = pathinfo($file->getOriginalName());
+            /** @var string $extension */
+            $extension = pathinfo($file->getOriginalName(), PATHINFO_EXTENSION);
             $hashName .= '.' . $extension;
         }
         if (!$file->getName()) {
             $file->setName($hashName);
         }
-        $file->addContext('Content-Type', $uploadedFile->getMimeType());
+
+        if ($mimeType = $uploadedFile->getMimeType()) {
+            $file->addContext('Content-Type', $mimeType);
+        }
         $file->addContext('filesize', (string)$uploadedFile->getSize());
         $provider = $this->grabProvider($file);
         $provider->persist($file);
@@ -104,7 +106,9 @@ class UniversalFileManager implements FileManagerInterface
 
     public function createNewFile(): File
     {
-        return new $this->ptsFileExtendedEntity();
+        /** @var File $file */
+        $file = new $this->ptsFileExtendedEntity();
+        return $file;
     }
 
     public function createStreamableUri(File $file): string
@@ -128,7 +132,7 @@ class UniversalFileManager implements FileManagerInterface
     /**
      * @throws ProviderNotFoundException
      */
-    public function getAuthorizedRemoteUri(File $file): ?string
+    public function getAuthorizedRemoteUri(File $file): string
     {
         $provider = $this->grabProvider($file);
         return $provider->getAuthorizedRemoteUri($file);

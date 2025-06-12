@@ -12,7 +12,7 @@ class LocalFileProvider implements FileProviderInterface
     ) {
     }
 
-    public function getAuthorizedRemoteUri(File $file): ?string
+    public function getAuthorizedRemoteUri(File $file): string
     {
         return $this->pubDirUrl . '/' . $file->getPath() . '/' . $file->getName();
     }
@@ -24,8 +24,11 @@ class LocalFileProvider implements FileProviderInterface
         if (!$stream) {
             $ref = $file->getUploadedFileReference();
             $stream = fopen($ref->getPathname(), 'r');
+            if (false === $stream) {
+                throw new \Exception("Failed to open stream for file reference " . $ref->getPathname());
+            }
         }
-
+        /** @var resource $stream */
 
         if (!file_exists($this->dir)) {
             mkdir(

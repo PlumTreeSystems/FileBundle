@@ -12,7 +12,7 @@ class S3FileProvider implements FileProviderInterface
     protected string $prefix = '';
 
     /**
-     * @param array<string, string|array<string, string>> $s3Config
+     * @param array{credentials:array{key:string,secret:string},region:string,bucket:string,prefix:string} $s3Config
      */
     public function __construct(array $s3Config)
     {
@@ -33,7 +33,7 @@ class S3FileProvider implements FileProviderInterface
         return $this->client;
     }
 
-    public function getAuthorizedRemoteUri(File $file): ?string
+    public function getAuthorizedRemoteUri(File $file): string
     {
         [$bucket, $key] = $this->extractBucketAndKey($file);
         $cmd = $this->client->getCommand('GetObject', [

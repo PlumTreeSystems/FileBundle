@@ -71,8 +71,10 @@ class PlumTreeSystemsFileExtension extends Extension
 
     private function registerFormTheme(ContainerBuilder $container): void
     {
-        $resources = $container->hasParameter('twig.form.resources') ?
-            $container->getParameter('twig.form.resources') : [];
+        /** @var array<string> $resources */
+        $resources = $container->hasParameter('twig.form.resources')
+            ? $container->getParameter('twig.form.resources')
+            : [];
 
         array_unshift($resources, '@PlumTreeSystemsFile/Form/fields.html.twig');
         $container->setParameter('twig.form.resources', $resources);

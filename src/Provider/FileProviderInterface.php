@@ -19,5 +19,5 @@ interface FileProviderInterface
     public function getRawRemoteUri(File $file): string;
 
     // Get pre signed and authorized file location
-    public function getAuthorizedRemoteUri(File $file): ?string;
+    public function getAuthorizedRemoteUri(File $file): string;
 }

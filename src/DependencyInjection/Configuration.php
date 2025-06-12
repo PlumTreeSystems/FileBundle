@@ -20,7 +20,6 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('plum_tree_systems_file');
         $rootNode = $treeBuilder->getRootNode();
 
-        /** @phpstan-ignore method.notFound */
         $rootNode
             ->children()
                 ->arrayNode('path_map')
